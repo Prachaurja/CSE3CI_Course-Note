@@ -1,0 +1,2197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSE5ML / CSE3CI — Course Notes, Weeks 1–6</title>
+<style>
+  :root {
+    --ink: #111111;
+    --ink-soft: #4a4a4a;
+    --line: #cfcfcf;
+    --line-soft: #e6e6e6;
+    --paper: #ffffff;
+    --paper-soft: #f5f5f5;
+    --max: 860px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
+    line-height: 1.65;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--ink); }
+  a:hover { color: var(--ink-soft); }
+
+  /* ---------- Top bar / nav ---------- */
+  header.site-head {
+    border-bottom: 1px solid var(--line);
+    padding: 3.5rem 1.5rem 2.5rem;
+    text-align: center;
+  }
+
+  header.site-head .kicker {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.9rem;
+  }
+
+  header.site-head h1 {
+    font-size: 2.1rem;
+    margin: 0 0 0.6rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  header.site-head p.sub {
+    color: var(--ink-soft);
+    margin: 0;
+    font-size: 1.02rem;
+  }
+
+  nav.toc {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(4px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  nav.toc .toc-inner {
+    max-width: var(--max);
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.86rem;
+  }
+
+  nav.toc a {
+    text-decoration: none;
+    color: var(--ink);
+    padding: 0.85rem 1rem;
+    border-left: 1px solid var(--line-soft);
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    white-space: nowrap;
+  }
+  nav.toc a:first-child { border-left: none; }
+  nav.toc a:hover { background: var(--paper-soft); }
+
+  nav.toc .nav-num {
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    width: 1.4rem;
+    height: 1.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ---------- Main content ---------- */
+  main {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  section.week {
+    padding: 3.5rem 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  section.week:last-of-type { border-bottom: none; }
+
+  .week-head {
+    margin-bottom: 2rem;
+  }
+
+  .week-tag {
+    display: inline-block;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.72rem;
+    color: var(--paper);
+    background: var(--ink);
+    padding: 0.28rem 0.6rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .week-head h2 {
+    font-size: 1.75rem;
+    margin: 0;
+    font-weight: 600;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 0.5rem;
+  }
+
+  .week-body h1 { display: none; } /* safety: no stray h1s inside body */
+
+  .week-body h2 {
+    font-size: 1.32rem;
+    margin: 2.6rem 0 1rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .week-body h3 {
+    font-size: 1.08rem;
+    margin: 1.8rem 0 0.7rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .week-body p { margin: 0.9rem 0; }
+
+  .week-body ul, .week-body ol {
+    margin: 0.9rem 0;
+    padding-left: 1.4rem;
+  }
+  .week-body li { margin: 0.35rem 0; }
+
+  .week-body img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1.1rem auto;
+    border: 1px solid var(--line);
+  }
+
+  .week-body hr {
+    border: none;
+    border-top: 1px solid var(--line-soft);
+    margin: 2.2rem 0;
+  }
+
+  .week-body strong { font-weight: 700; }
+  .week-body em { font-style: italic; }
+
+  .week-body blockquote {
+    margin: 1.1rem 0;
+    padding: 0.2rem 1.1rem;
+    border-left: 3px solid var(--ink);
+    color: var(--ink-soft);
+  }
+
+  .week-body code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.88em;
+    background: var(--paper-soft);
+    padding: 0.1em 0.35em;
+    border: 1px solid var(--line-soft);
+  }
+
+  .week-body pre {
+    background: var(--paper-soft);
+    border: 1px solid var(--line-soft);
+    padding: 1rem;
+    overflow-x: auto;
+  }
+  .week-body pre code {
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .week-body table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.2rem 0;
+    font-size: 0.94rem;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+  }
+  .week-body th, .week-body td {
+    border: 1px solid var(--line);
+    padding: 0.5rem 0.7rem;
+    text-align: left;
+  }
+  .week-body th {
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 600;
+  }
+  .week-body tr:nth-child(even) td { background: var(--paper-soft); }
+
+  /* This lecture's own internal table-of-contents list */
+  .week-body > ol:first-of-type,
+  .week-body > ul:first-of-type {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    background: var(--paper-soft);
+    border: 1px solid var(--line-soft);
+    padding: 1.1rem 1.1rem 1.1rem 2.2rem;
+  }
+
+  a.back-top {
+    display: inline-block;
+    margin-top: 2rem;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+    padding: 0.5rem 0.9rem;
+  }
+  a.back-top:hover { border-color: var(--ink); color: var(--ink); }
+
+  footer {
+    text-align: center;
+    padding: 3rem 1.5rem 4rem;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    header.site-head { padding: 2.5rem 1.2rem 2rem; }
+    header.site-head h1 { font-size: 1.6rem; }
+    nav.toc .toc-inner { justify-content: flex-start; overflow-x: auto; }
+  }
+
+  @media print {
+    nav.toc { position: static; }
+    a.back-top { display: none; }
+  }
+</style>
+</head>
+<body id="top">
+
+  <header class="site-head">
+    <div class="kicker">CSE5ML / CSE3CI &middot; La Trobe University &middot; 2026</div>
+    <h1>Machine Learning — Course Notes</h1>
+    <p class="sub">Weeks 1–6, compiled from lecture slides &middot; Dr. Peng Cheng</p>
+  </header>
+
+  <nav class="toc">
+    <div class="toc-inner">
+      <a href="#week-1"><span class="nav-num">01</span>Machine Learning Basics</a>
+<a href="#week-2"><span class="nav-num">02</span>Regression</a>
+<a href="#week-3"><span class="nav-num">03</span>Binary Classification</a>
+<a href="#week-4"><span class="nav-num">04</span>SVM and Multi-Class Classification</a>
+<a href="#week-5"><span class="nav-num">05</span>Unsupervised Learning</a>
+<a href="#week-6"><span class="nav-num">06</span>Neural Networks Basics</a>
+    </div>
+  </nav>
+
+  <main>
+    
+    <section class="week" id="week-1">
+      <div class="week-head">
+        <span class="week-tag">Week 1</span>
+        <h2>Machine Learning Basics</h2>
+      </div>
+      <div class="week-body">
+        <p><strong>Subject Coordinator &amp; Lecturer:</strong> Dr Peng Cheng (p.cheng@latrobe.edu.au)
+<strong>Tutors:</strong> Dr Yijie Gao (5ML) · yijie.gao@latrobe.edu.au — Dinh Luat Do (3CI) · L3Do@ltu.edu.au</p>
+<p>La Trobe University · 2026</p>
+<p><img alt="Title slide" src="assets/week1/slide-01.png" /></p>
+<hr />
+<h2 id="w1-table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#w1-contact-information">Contact Information</a></li>
+<li><a href="#w1-lectures-and-labs-schedule">Lectures and Labs Schedule</a></li>
+<li><a href="#w1-subject-materials-and-announcements">Subject Materials and Announcements</a></li>
+<li><a href="#w1-policies--grading">Policies &amp; Grading</a></li>
+<li><a href="#w1-things-machine-learning-can-do">Things Machine Learning Can Do</a></li>
+<li><a href="#w1-what-is-machine-learning">What is Machine Learning?</a></li>
+<li><a href="#w1-a-brief-history-of-ml">A Brief History of ML</a></li>
+<li><a href="#w1-ai-ml--deep-learning">AI, ML &amp; Deep Learning</a></li>
+<li><a href="#w1-paradigms-of-machine-learning">Paradigms of Machine Learning</a></li>
+<li><a href="#w1-broad-machine-learning-tasks">Broad Machine Learning Tasks</a></li>
+<li><a href="#w1-regression-vs-classification">Regression vs Classification</a></li>
+<li><a href="#w1-tasks-methods-and-algorithms">Tasks, Methods, and Algorithms</a></li>
+<li><a href="#w1-key-enablers-for-modern-ml">Key Enablers for Modern ML</a></li>
+<li><a href="#w1-linear-models">Linear Models</a></li>
+<li><a href="#w1-convolutional--recurrent-neural-networks">Convolutional &amp; Recurrent Neural Networks</a></li>
+<li><a href="#w1-machine-learning-in-practice">Machine Learning in Practice</a></li>
+<li><a href="#w1-is-mlai-dangerous">Is ML/AI Dangerous?</a></li>
+<li><a href="#w1-recap--self-check-quiz">Recap &amp; Self-Check Quiz</a></li>
+<li><a href="#w1-tesla-autonomous-driving">Tesla Autonomous Driving</a></li>
+<li><a href="#w1-references">References</a></li>
+</ol>
+<hr />
+<h2 id="w1-contact-information">Contact Information</h2>
+<ul>
+<li><strong>Subject Coordinator &amp; Lecturer:</strong> Dr Peng Cheng — p.cheng@latrobe.edu.au</li>
+<li><strong>Tutors:</strong> Dr Yijie Gao (5ML) — yijie.gao@latrobe.edu.au; Dinh Luat Do (3CI) — L3Do@ltu.edu.au</li>
+</ul>
+<p><img alt="Contact information" src="assets/week1/slide-02.png" /></p>
+<hr />
+<h2 id="w1-lectures-and-labs-schedule">Lectures and Labs Schedule</h2>
+<table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Lecture</th>
+<th>Lab</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>W1</td>
+<td>Machine Learning Basics</td>
+<td>Introduction to Python (Part 1)</td>
+</tr>
+<tr>
+<td>W2</td>
+<td>Regression (Linear &amp; Polynomial Regression)</td>
+<td>Introduction to Python (Part 2)</td>
+</tr>
+<tr>
+<td>W3</td>
+<td>Classification (Binary &amp; Multi-Class)</td>
+<td>Python for Regression</td>
+</tr>
+<tr>
+<td>W4</td>
+<td>Support Vector Machines</td>
+<td>Python for Classification</td>
+</tr>
+<tr>
+<td>W5</td>
+<td>Unsupervised Learning and Regularizations</td>
+<td>Python for Unsupervised Learning</td>
+</tr>
+<tr>
+<td>W6</td>
+<td>Neural Networks Basics</td>
+<td>Python &amp; TensorFlow for Neural Networks (Part 1)</td>
+</tr>
+<tr>
+<td>W7</td>
+<td><em>University Holiday — no classes</em></td>
+<td><em>University Holiday — no classes</em></td>
+</tr>
+<tr>
+<td>W8</td>
+<td>Convolutional Neural Networks 1</td>
+<td>Python &amp; TensorFlow for Neural Networks (Part 2)</td>
+</tr>
+<tr>
+<td>W9</td>
+<td>Convolutional Neural Networks 2</td>
+<td>Convolutional Neural Networks (Part 1)</td>
+</tr>
+<tr>
+<td>W10</td>
+<td>Recurrent Neural Network &amp; LSTM</td>
+<td>Convolutional Neural Networks (Part 2)</td>
+</tr>
+<tr>
+<td>W11</td>
+<td>Reinforcement Learning</td>
+<td>Recurrent Neural Network</td>
+</tr>
+<tr>
+<td>W12</td>
+<td>Generative Adversarial Networks / Transformer</td>
+<td>Introduction to Microsoft Azure</td>
+</tr>
+<tr>
+<td>W13</td>
+<td>Subject Review</td>
+<td>Machine Learning Tasks with Microsoft Azure</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Lectures and labs schedule" src="assets/week1/slide-03.png" /></p>
+<p>The subject includes a Microsoft Azure AI Fundamentals component in the final weeks:</p>
+<p><img alt="Microsoft Certified Azure AI Fundamentals" src="assets/week1/slide-04.png" /></p>
+<hr />
+<h2 id="w1-subject-materials-and-announcements">Subject Materials and Announcements</h2>
+<ul>
+<li>Everything (lecture notes, lab instructions, assignment questions, announcements) is posted to <strong>LMS</strong> — check it as often as possible.</li>
+<li><strong>Recommended readings:</strong></li>
+<li><em>Neural Networks and Deep Learning</em> — Michael Nielsen, Determination Press, 2015</li>
+<li><em>Neural Networks and Learning Machines</em> (3rd ed.) — Simon Haykin, Prentice Hall, 2008</li>
+<li>CS229 Machine Learning — https://cs229.stanford.edu</li>
+</ul>
+<p><img alt="Subject materials and announcements" src="assets/week1/slide-05.png" /></p>
+<hr />
+<h2 id="w1-policies--grading">Policies &amp; Grading</h2>
+<ul>
+<li><strong>Late penalty:</strong> 5% of total possible marks deducted per day late, accepted up to 5 working days after the due date. Submissions later than that are <strong>not accepted</strong>.</li>
+<li><strong>Assessment breakdown:</strong></li>
+<li>Assignment I — 20%</li>
+<li>Assignment II — 30%</li>
+<li>Final Exam — 50%</li>
+<li>Refer to the Special Consideration Policy if needed: https://policies.latrobe.edu.au/document/view.php?id=205</li>
+</ul>
+<p><img alt="Policies and grading" src="assets/week1/slide-06.png" /></p>
+<hr />
+<h2 id="w1-things-machine-learning-can-do">Things Machine Learning Can Do</h2>
+<ul>
+<li>Speech recognition</li>
+<li>Natural language understanding in narrowly bounded domains</li>
+<li>Image recognition</li>
+<li>Playing video games at a pro level</li>
+<li>Robot locomotion</li>
+<li>Driving safely along a curving road</li>
+<li>Real-time spoken Chinese → spoken English translation</li>
+</ul>
+<p><img alt="Things ML can do" src="assets/week1/slide-07.png" /></p>
+<p><strong>Examples shown in the deck:</strong></p>
+<p>Voice assistants (e.g. Google Assistant):</p>
+<p><img alt="Voice assistant demo" src="assets/week1/slide-08.png" /></p>
+<p>Object detection for street scenes (cars, people, traffic lights):</p>
+<p><img alt="Object detection example" src="assets/week1/slide-09.png" /></p>
+<p>Simulated robot locomotion (reinforcement learning agent learning to run):</p>
+<p><img alt="Simulated locomotion" src="assets/week1/slide-10.png" /></p>
+<p>Robotic arm harvesting lettuce in a field:</p>
+<p><img alt="Robotic harvesting arm" src="assets/week1/slide-12.png" /></p>
+<hr />
+<h2 id="w1-what-is-machine-learning">What is Machine Learning?</h2>
+<ul>
+<li><strong>Arthur Samuel (1959)</strong> first used the term Machine Learning to describe <em>"the programming of a digital computer to behave in a way which would be described as involving the process of learning."</em></li>
+<li><strong>Tom M. Mitchell (1998)</strong> gave the classic formal definition: <em>"A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P if its performance at tasks in T, as measured by P, improves with experience E."</em></li>
+</ul>
+<p><img alt="Machine learning definitions" src="assets/week1/slide-13.png" /></p>
+<ul>
+<li>In short: ML is a set of <strong>computational methods</strong> that use <strong>experience</strong> (data — statistics/probability) to improve <strong>performance</strong>, e.g. making accurate predictions.</li>
+<li>Example: using a house's location and size to predict its price.</li>
+<li>In Computer Science, ML requires designing efficient, accurate algorithms, analysing their complexity, and establishing theoretical guarantees.</li>
+</ul>
+<p><img alt="Machine learning explained" src="assets/week1/slide-14.png" /></p>
+<ul>
+<li>Designing algorithms that use data to programmatically learn a model of it.</li>
+<li>The learned model can detect patterns/structures/trends in data, and make predictions/decisions about future data.</li>
+<li>Modern ML is heavily <strong>data-driven</strong> — rules don't need to be hand-coded and can adapt as more data is ingested.</li>
+</ul>
+<p><img alt="What is machine learning — spam, forecasting, topic tagging examples" src="assets/week1/slide-16.png" /></p>
+<p>At its core, ML is about <strong>using data for answering questions</strong> — via <strong>Training</strong> and <strong>Predicting</strong>:</p>
+<p><img alt="Training and predicting" src="assets/week1/slide-17.png" /></p>
+<hr />
+<h2 id="w1-a-brief-history-of-ml">A Brief History of ML</h2>
+<p>From Bayes' Theorem (~1800) and the Perceptron, through the "AI Winter", SVMs, Random Forests, Deep Learning, and up to today's large language models (GPT‑3/4):</p>
+<p><img alt="History of machine learning timeline" src="assets/week1/slide-15.png" /></p>
+<hr />
+<h2 id="w1-ai-ml--deep-learning">AI, ML &amp; Deep Learning</h2>
+<p>Machine Learning is a subset of Artificial Intelligence, and Deep Learning is a subset of Machine Learning:</p>
+<p><img alt="AI, ML, and Deep Learning nested diagram" src="assets/week1/slide-18.png" /></p>
+<hr />
+<h2 id="w1-paradigms-of-machine-learning">Paradigms of Machine Learning</h2>
+<p><strong>Learning from data:</strong> past data (with labels) trains a function <em>f</em>, which is then used to predict on future/unseen data (e.g. classifying an image as "car"):</p>
+<p><img alt="Learning from data paradigm" src="assets/week1/slide-19.png" /></p>
+<p>This splits into two phases:
+- <strong>Training phase:</strong> labelled samples → feature extraction → features + labels → ML model
+- <strong>Prediction phase:</strong> new input → feature extraction → trained classifier → predicted label</p>
+<p><img alt="Training phase and prediction phase" src="assets/week1/slide-20.png" /></p>
+<hr />
+<h2 id="w1-broad-machine-learning-tasks">Broad Machine Learning Tasks</h2>
+<p>The four core tasks covered in this subject: <strong>Classification</strong>, <strong>Regression</strong>, <strong>Clustering</strong>, and <strong>Dimensionality Reduction</strong>.</p>
+<p><img alt="Broad machine learning tasks overview" src="assets/week1/slide-21.png" /></p>
+<h3 id="w1-classification">Classification</h3>
+<p>Classification predicts <strong>categorical</strong> (unordered) labels. Example applications: spam detection, face recognition.</p>
+<p><strong>Spam recognition</strong> (binary classification — spam vs. not spam):</p>
+<p><img alt="Spam recognition inbox example" src="assets/week1/slide-22.png" /></p>
+<p><img alt="Spam classifier training pipeline" src="assets/week1/slide-23.png" /></p>
+<p><strong>Face recognition</strong> (multi-class classification):</p>
+<p><img alt="Face recognition classifier example" src="assets/week1/slide-24.png" /></p>
+<p><strong>Image recognition</strong> (multi-class, multi-label classification):</p>
+<p><img alt="Image recognition classifier example" src="assets/week1/slide-25.png" /></p>
+<h3 id="w1-regression">Regression</h3>
+<p>Regression predicts <strong>continuous, ordered</strong> labels. Example: predicting a house's price from its features (bedrooms, bathrooms, square footage, distance to amenities, lot size, age, days on market, etc.):</p>
+<p><img alt="Housing price regression example" src="assets/week1/slide-27.png" /></p>
+<h3 id="w1-clustering">Clustering</h3>
+<p><strong>Unsupervised learning</strong> — given input vectors and a target number of clusters <em>k</em>, output a predicted class for each point, with no pre-existing labels:</p>
+<p><img alt="Clustering unsupervised learning example" src="assets/week1/slide-32.png" /></p>
+<ul>
+<li><strong>Supervised learning:</strong> learns a function from <em>labeled</em> training data (classification and regression are supervised tasks).</li>
+<li><strong>Unsupervised learning:</strong> draws inferences from data <em>without labels</em> (clustering is unsupervised).</li>
+</ul>
+<p><img alt="Supervised vs unsupervised learning definitions" src="assets/week1/slide-33.png" /></p>
+<h3 id="w1-dimensionality-reduction">Dimensionality Reduction</h3>
+<p>Compresses a high-dimensional feature vector into a low-dimensional one, useful for visualization/analysis and for making downstream ML more efficient or accurate. Common methods: PCA, Kernel PCA, manifold learning, autoencoders, LDA.</p>
+<p><img alt="Dimensionality reduction — high-dim to low-dim vector" src="assets/week1/slide-35.png" /></p>
+<h3 id="w1-beyond-the-core-four">Beyond the Core Four</h3>
+<p>Other ML task families mentioned: <strong>Ranking</strong>, <strong>Recommendation</strong>, and <strong>Reinforcement Learning</strong> (e.g. AlphaGo):</p>
+<p><img alt="Ranking, recommendation, and reinforcement learning examples" src="assets/week1/slide-37.png" /></p>
+<hr />
+<h2 id="w1-regression-vs-classification">Regression vs Classification</h2>
+<ul>
+<li><strong>Regression:</strong> labels are continuous and <em>ordered</em> (e.g. house prices — $324K &lt; $521K &lt; $1.2M).</li>
+<li><strong>Classification:</strong> labels are categorical and have <strong>no inherent order</strong> (e.g. "Class 1" and "Class 4" cannot be compared as greater/lesser).</li>
+</ul>
+<p><img alt="Regression example — ordered house prices" src="assets/week1/slide-28.png" /></p>
+<p><img alt="Classification example — unordered categories" src="assets/week1/slide-30.png" /></p>
+<hr />
+<h2 id="w1-tasks-methods-and-algorithms">Tasks, Methods, and Algorithms</h2>
+<p>Three layers of abstraction in ML: <strong>Tasks</strong> (the problem, e.g. classification), <strong>Methods</strong> (the model, e.g. Logistic Regression), and <strong>Algorithms</strong> (how it's solved, e.g. Gradient Descent, Newton's Method):</p>
+<p><img alt="Tasks, methods, and algorithms breakdown" src="assets/week1/slide-38.png" /></p>
+<hr />
+<h2 id="w1-key-enablers-for-modern-ml">Key Enablers for Modern ML</h2>
+<ul>
+<li>Availability of large amounts of data to train models (e.g. ImageNet)</li>
+<li>Increased computing power (e.g. GPUs)</li>
+</ul>
+<p><img alt="Key enablers for modern ML — ImageNet and GPUs" src="assets/week1/slide-39.png" /></p>
+<hr />
+<h2 id="w1-linear-models">Linear Models</h2>
+<ul>
+<li><strong>Feature vector:</strong> x ∈ ℝᵈ (e.g. features of a house)</li>
+<li><strong>Prediction:</strong> f(x) = xᵀw = w₁x₁ + w₂x₂ + ... + w_d x_d, where w₁...w_d are learned weights and x₁, x₂, x₃... are features such as bedrooms, bathrooms, square feet.</li>
+</ul>
+<p><img alt="Linear model formula" src="assets/week1/slide-41.png" /></p>
+<p>Given training features <strong>x₁,...,xₙ</strong> and targets <strong>y₁,...,yₙ</strong>, the weight vector <strong>w</strong> is found by minimising a <strong>loss function</strong> — for least squares regression:</p>
+<p>L(w) = (1/n) Σᵢ (xᵢᵀw − yᵢ)², solved via <strong>w* = min_w L(w)</strong></p>
+<p><img alt="Least squares loss function and optimization" src="assets/week1/slide-44.png" /></p>
+<p><strong>Limitation:</strong> linear models are <strong>not expressive</strong> enough for tasks like predicting age from a photo, since they assume the output is just a weighted average of every pixel:</p>
+<p><img alt="Linear models are not expressive — age prediction example" src="assets/week1/slide-45.png" /></p>
+<hr />
+<h2 id="w1-convolutional--recurrent-neural-networks">Convolutional &amp; Recurrent Neural Networks</h2>
+<h3 id="w1-cnns">CNNs</h3>
+<p>CNNs learn a hierarchy of features — low-level (edges/colours), mid-level (textures/shapes), high-level (object parts) — feeding into a trainable classifier:</p>
+<p><img alt="CNN feature hierarchy" src="assets/week1/slide-46.png" /></p>
+<p><strong>Application — medical diagnosis:</strong> classifying skin lesions as benign/malignant with accuracy comparable to human dermatologists (Esteva et al., <em>Nature</em>, 2017):</p>
+<p><img alt="CNN skin cancer diagnosis application" src="assets/week1/slide-47.png" /></p>
+<p><strong>Application — self-driving cars:</strong> CNNs interpret camera images to recognise signs, cars, pedestrians, and obstacles (though a full self-driving stack is far more than just a CNN):</p>
+<p><img alt="CNN self-driving car application" src="assets/week1/slide-48.png" /></p>
+<h3 id="w1-rnns">RNNs</h3>
+<p>RNNs are naturally suited to <strong>sequence data</strong> (time series, text, speech), processing one element at a time while carrying forward a hidden state:</p>
+<p><img alt="Recurrent neural network diagram" src="assets/week1/slide-49.png" /></p>
+<p><strong>Application — machine translation:</strong> e.g. real-time Chinese-to-English translation:</p>
+<p><img alt="RNN machine translation application" src="assets/week1/slide-50.png" /></p>
+<hr />
+<h2 id="w1-machine-learning-in-practice">Machine Learning in Practice</h2>
+<p>Doing ML in practice splits into two halves — <strong>Modeling</strong> and <strong>Computation</strong>:</p>
+<p><img alt="Modeling and computation overview with neural network architectures" src="assets/week1/slide-40.png" /></p>
+<p><strong>Modeling:</strong> choosing the model that fits the data and problem (network structure, activation functions, loss functions, etc.) and improving prediction accuracy through experience and understanding of the problem/data.</p>
+<p><img alt="Modeling in practice" src="assets/week1/slide-54.png" /></p>
+<p><strong>Computation:</strong> designing/applying efficient algorithms, implementing them with systems like TensorFlow or Hadoop, and optimising code — this draws on experience with both algorithms and systems.</p>
+<p><img alt="Computation in practice" src="assets/week1/slide-55.png" /></p>
+<h3 id="w1-computational-challenges">Computational Challenges</h3>
+<ul>
+<li><strong>Big data:</strong> e.g. ImageNet has 14 million 256×256 images.</li>
+<li><strong>Big model:</strong> e.g. ResNet‑50 has 25 million parameters.</li>
+<li>Big data + big model together create real computational challenges — training ResNet‑50 on ImageNet on a single GPU takes around <strong>14 days</strong>, which is why efficient algorithms and software systems matter.</li>
+</ul>
+<p><img alt="Computational challenges — big data and big models" src="assets/week1/slide-53.png" /></p>
+<hr />
+<h2 id="w1-is-mlai-dangerous">Is ML/AI Dangerous?</h2>
+<p>The lecture closes its conceptual section with a range of perspectives from industry and academic figures on AI risk and potential — spanning existential-risk concerns (comparisons to nuclear weapons, "unfriendly superintelligence") to more optimistic framings (AI as "the ultimate search engine", or as leading to either self-destruction or colonizing the universe).</p>
+<p><img alt="Perspectives on AI risk — part 1" src="assets/week1/slide-56.png" /></p>
+<p><img alt="Perspectives on AI risk — part 2" src="assets/week1/slide-57.png" /></p>
+<hr />
+<h2 id="w1-recap--self-check-quiz">Recap &amp; Self-Check Quiz</h2>
+<p>A 3-minute recap of the ML pipeline — <strong>Data → Model → Prediction</strong>:</p>
+<p><img alt="Machine learning in 3 minutes recap" src="assets/week1/slide-58.png" /></p>
+<p>Self-check questions covering the definition of ML, its relationship to AI, the three main learning paradigms (supervised, unsupervised, reinforcement), and terminology such as "unsupervised learning" (learning from unlabelled data):</p>
+<p><img alt="Self-check quiz questions" src="assets/week1/slide-59.png" /></p>
+<hr />
+<h2 id="w1-tesla-autonomous-driving">Tesla Autonomous Driving</h2>
+<p>Closing case study on real-world autonomous driving, illustrating in-cabin views, "No Driver" footage, and Tesla's AI supercomputer for training its self-driving systems:</p>
+<p><img alt="Tesla autonomous driving — in-cabin view" src="assets/week1/slide-60.png" /></p>
+<p><img alt="Tesla autonomous driving — no driver" src="assets/week1/slide-61.png" /></p>
+<p><img alt="Tesla AI supercomputer" src="assets/week1/slide-62.png" /></p>
+<hr />
+<h2 id="w1-references">References</h2>
+<ul>
+<li>Lawrence, J. (1994). <em>Introduction to Neural Networks</em>. California Scientific Software Press.</li>
+<li>Michalski, R. S., Carbonell, J. G., &amp; Mitchell, T. M. (Eds.). (2013). <em>Machine Learning: An Artificial Intelligence Approach</em>. Springer Science &amp; Business Media.</li>
+<li>Mitchell, T. (1997). <em>Machine Learning</em>. McGraw Hill.</li>
+<li>Samuel, A. L. (1959). Some Studies in Machine Learning Using the Game of Checkers. <em>IBM Journal of Research and Development</em>, 3(3), 210–229. doi: 10.1147/rd.33.0210</li>
+<li>https://github.com/wangshusen/DeepLearning (free use for education)</li>
+<li>https://cs229.stanford.edu</li>
+</ul>
+<p><img alt="References slide" src="assets/week1/slide-63.png" /></p>
+<hr />
+<p align="center"><em>Thank you — latrobe.edu.au</em></p>
+      </div>
+      <a class="back-top" href="#top">&uarr; Back to top</a>
+    </section>
+
+
+    <section class="week" id="week-2">
+      <div class="week-head">
+        <span class="week-tag">Week 2</span>
+        <h2>Regression</h2>
+      </div>
+      <div class="week-body">
+        <p><strong>Dr. Peng Cheng — La Trobe University, 2026</strong></p>
+<p>A study-notes version of the lecture slides, with every slide image embedded alongside its key points.</p>
+<hr />
+<h2 id="w2-table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#w2-geometric-perspective">Geometric Perspective</a></li>
+<li><a href="#w2-data-and-features">Data and Features</a></li>
+<li><a href="#w2-vectors-matrices--gradients">Vectors, Matrices &amp; Gradients</a></li>
+<li><a href="#w2-regression-basics">Regression Basics</a></li>
+<li><a href="#w2-linear-regression">Linear Regression</a></li>
+<li><a href="#w2-least-squares-regression">Least Squares Regression</a></li>
+<li><a href="#w2-gradient-descent">Gradient Descent</a></li>
+<li><a href="#w2-polynomial-regression">Polynomial Regression</a></li>
+<li><a href="#w2-training-and-testing">Training and Testing</a></li>
+<li><a href="#w2-hyper-parameter-tuning">Hyper-Parameter Tuning</a></li>
+<li><a href="#w2-cross-validation">Cross-Validation</a></li>
+<li><a href="#w2-summary">Summary</a></li>
+<li><a href="#w2-real-world-examples">Real-World Examples</a></li>
+<li><a href="#w2-references">References</a></li>
+</ol>
+<hr />
+<h2 id="w2-geometric-perspective">Geometric Perspective</h2>
+<p><img alt="Slide 2" src="assets/week2/slide-02.png" /></p>
+<ul>
+<li>ML inputs can usually be represented as <strong>points/vectors</strong> → ML becomes a geometric problem.</li>
+<li><strong>Regression</strong>: supervised learning, predicts a real-valued output from input(s) — like line/curve fitting.</li>
+<li><strong>Classification</strong>: supervised learning, predicts which class an input belongs to — like learning a linear/nonlinear separator.</li>
+</ul>
+<p><img alt="Slide 3" src="assets/week2/slide-03.png" /></p>
+<ul>
+<li><strong>Clustering</strong>: unsupervised — group inputs by similarity, <em>no labels available</em> (unlike classification).</li>
+<li><strong>Dimensionality Reduction</strong>: unsupervised — compress inputs while keeping most of the information (linear or nonlinear/manifold projection).</li>
+</ul>
+<hr />
+<h2 id="w2-data-and-features">Data and Features</h2>
+<p><img alt="Slide 4" src="assets/week2/slide-04.png" /></p>
+<ul>
+<li>ML algorithms need a <strong>numeric feature representation</strong> of inputs.</li>
+<li>Two ways to get features:</li>
+<li><strong>Approach 1</strong>: manually extract/construct features (focus of this course for now).</li>
+<li><strong>Approach 2</strong>: learn the features automatically (this is what Deep Learning does).</li>
+<li>Manual features are less powerful than learned ones, but still widely used.</li>
+</ul>
+<p><img alt="Slide 5" src="assets/week2/slide-05.png" /></p>
+<ul>
+<li>Example — image feature extraction:</li>
+<li><strong>Flattening</strong>: turn a 7×7 image into a 49-length pixel-intensity vector.</li>
+<li><strong>Histogram of visual patterns</strong>: another popular method.</li>
+<li>Both destroy spatial information but often still work reasonably well.</li>
+<li>Other manual techniques: SIFT, HoG, etc.</li>
+</ul>
+<p><img alt="Slide 6" src="assets/week2/slide-06.png" /></p>
+<ul>
+<li><strong>Feature Selection</strong> (after feature extraction): keep only relevant features, discard the rest.</li>
+<li>Example: from {Age, Gender, Height, Weight, Eye color} → derive <strong>BMI</strong>.</li>
+<li>Mostly used in supervised learning, but can be applied in unsupervised learning too.</li>
+</ul>
+<hr />
+<h2 id="w2-vectors-matrices--gradients">Vectors, Matrices &amp; Gradients</h2>
+<p><img alt="Slide 7" src="assets/week2/slide-07.png" /></p>
+<ul>
+<li><strong>Vector</strong> (n-dim): a column of scalars <strong>a</strong> = [a₁, a₂, …, aₙ]ᵀ</li>
+<li><strong>Matrix</strong> (n×d): a grid of scalars, can be viewed as a set of rows or columns.</li>
+</ul>
+<p><img alt="Slide 8" src="assets/week2/slide-08.png" /></p>
+<ul>
+<li><strong>Vector norms</strong>:</li>
+<li>ℓₚ norm: ‖x‖ₚ = (Σ|xᵢ|ᵖ)^(1/p)</li>
+<li>ℓ₂ (Euclidean): ‖x‖₂ = (Σxᵢ²)^(1/2)</li>
+<li>ℓ₁: ‖x‖₁ = Σ|xᵢ|</li>
+<li>ℓ∞: ‖x‖∞ = maxᵢ|xᵢ|</li>
+<li><strong>Transpose</strong>: flips rows ↔ columns.</li>
+</ul>
+<p><img alt="Slide 9" src="assets/week2/slide-09.png" /></p>
+<ul>
+<li><strong>Gradient</strong>: the vector of partial derivatives of a function f(x) w.r.t. each variable:
+  g(x) = ∇f(x) = [∂f/∂x₁, …, ∂f/∂xₙ]ᵀ</li>
+</ul>
+<hr />
+<h2 id="w2-regression-basics">Regression Basics</h2>
+<p><img alt="Slide 10" src="assets/week2/slide-10.png" /></p>
+<ul>
+<li><strong>Regression</strong>: models a target value based on independent predictors.</li>
+<li>Mostly used for <strong>forecasting</strong> and finding <strong>cause-and-effect relationships</strong>.</li>
+<li>Techniques differ by (a) number of independent variables and (b) the type of relationship between dependent/independent variables.</li>
+</ul>
+<p><img alt="Slide 11" src="assets/week2/slide-11.png" /></p>
+<ul>
+<li>Visual: fitting a line to a set of points, minimizing the offset between predictions and actual values.</li>
+</ul>
+<hr />
+<h2 id="w2-linear-regression">Linear Regression</h2>
+<p><img alt="Slide 12" src="assets/week2/slide-12.png" /></p>
+<ul>
+<li>Linear regression = fitting a <strong>line or (hyper)plane</strong> to a set of points.</li>
+<li>The fitted line/plane must generalize well to <strong>unseen (test)</strong> inputs, not just the training data.</li>
+<li>Open question raised: what if the true relationship is nonlinear — are linear models useless then? (Answered later via polynomial regression.)</li>
+</ul>
+<p><img alt="Slide 13" src="assets/week2/slide-13.png" /></p>
+<ul>
+<li>Classic example: predicting <strong>house price</strong> from <strong>living area</strong> (Portland, Oregon housing dataset).</li>
+</ul>
+<p><img alt="Slide 14" src="assets/week2/slide-14.png" /></p>
+<ul>
+<li>Richer version of the same dataset: adds a second feature, <strong>#bedrooms</strong>, alongside living area.</li>
+</ul>
+<p><img alt="Slide 15" src="assets/week2/slide-15.png" /></p>
+<ul>
+<li><strong>Simplest linear regression model</strong> — the base model for all statistical ML:</li>
+<li><code>y = w₀ + w₁x + ε</code></li>
+<li>x: single feature; y: value to predict</li>
+<li>w₁: slope, w₀: y-intercept — the two parameters to estimate</li>
+<li>ε: unexplained/random error term</li>
+</ul>
+<p><img alt="Slide 16" src="assets/week2/slide-16.png" /></p>
+<ul>
+<li>Goal: find {w₀, w₁} that minimize squared deviations from the line:
+  <code>argmin Σ(yᵢ − w₀ − w₁xᵢ)²</code></li>
+<li>How to solve it? Not by brute-force search over all w — it has a <strong>closed-form solution</strong> via calculus.</li>
+<li>Very few ML optimization problems have closed-form solutions; the ones that do are special.</li>
+</ul>
+<p><img alt="Slide 17" src="assets/week2/slide-17.png" /></p>
+<ul>
+<li>Set partial derivatives ∂ε²/∂w₀ and ∂ε²/∂w₁ to zero and solve.</li>
+<li>Closed-form result:</li>
+<li><code>w₀ = ȳ − w₁x̄</code></li>
+<li><code>w₁ = [n·Σxᵢyᵢ − Σxᵢ·Σyᵢ] / [n·Σxᵢxᵢ − Σxᵢ·Σxᵢ]</code></li>
+</ul>
+<p><img alt="Slide 18" src="assets/week2/slide-18.png" /></p>
+<ul>
+<li>General (multi-feature) formulation:</li>
+<li><strong>Input</strong>: vectors x₁,…,xₙ ∈ ℝᵈ and labels y₁,…,yₙ ∈ ℝ</li>
+<li><strong>Output</strong>: weight vector <strong>w</strong> ∈ ℝᵈ and scalar bias b such that xᵢᵀw + b ≈ yᵢ</li>
+<li>1-D example solution shown: yᵢ ≈ 0.15xᵢ + 5.0</li>
+</ul>
+<p><img alt="Slide 19" src="assets/week2/slide-19.png" /></p>
+<ul>
+<li>With two features (x₁, x₂), linear regression fits a <strong>plane</strong> in 3D rather than a line.</li>
+</ul>
+<hr />
+<h2 id="w2-least-squares-regression">Least Squares Regression</h2>
+<p><img alt="Slide 20" src="assets/week2/slide-20.png" /></p>
+<ul>
+<li><strong>Method</strong>: least squares regression.</li>
+<li>Optimization model: <code>min_{w,b} Σᵢ(xᵢᵀw + b − yᵢ)²</code></li>
+</ul>
+<p><img alt="Slide 21" src="assets/week2/slide-21.png" /></p>
+<ul>
+<li>Trick: absorb the bias <strong>b</strong> into <strong>w</strong> by appending a constant 1 to each xᵢ:</li>
+<li>x̄ᵢ = [xᵢ; 1], w̄ = [w; b] → x̄ᵢᵀw̄ = xᵢᵀw + b</li>
+</ul>
+<p><img alt="Slide 22" src="assets/week2/slide-22.png" /></p>
+<ul>
+<li>Stack all augmented vectors into a matrix <strong>X̄</strong> (n×(d+1)) and labels into vector <strong>y</strong>.</li>
+</ul>
+<p><img alt="Slide 23" src="assets/week2/slide-23.png" /></p>
+<ul>
+<li>The per-example residuals stack into a vector <strong>X̄w̄ − y</strong>.</li>
+</ul>
+<p><img alt="Slide 24" src="assets/week2/slide-24.png" /></p>
+<ul>
+<li>The sum of squared residuals equals the squared <strong>ℓ₂ norm</strong> of that residual vector:</li>
+<li><code>min_w̄ ‖X̄w̄ − y‖₂²</code>  (matrix form of least squares)</li>
+</ul>
+<p><img alt="Slide 25" src="assets/week2/slide-25.png" /></p>
+<ul>
+<li>Framework: <strong>Task</strong> (Linear Regression) → <strong>Method</strong> (Least Squares Regression, also LASSO / Least Absolute Deviations exist) → <strong>Algorithms</strong> (Analytical Solution, Gradient Descent, Conjugate Gradient).</li>
+</ul>
+<p><img alt="Slide 26" src="assets/week2/slide-26.png" /></p>
+<ul>
+<li>Taking the gradient and setting it to zero gives the <strong>normal equation</strong>:</li>
+<li>Gradient: <code>2(X̄ᵀX̄w̄ − X̄ᵀy) = 0</code></li>
+<li>Normal equation: <code>X̄ᵀX̄ w̄* = X̄ᵀy</code></li>
+<li>(Assuming X̄ᵀX̄ is full rank) <strong>Analytical solution</strong>: <code>w̄* = (X̄ᵀX̄)⁻¹ X̄ᵀy</code></li>
+</ul>
+<hr />
+<h2 id="w2-gradient-descent">Gradient Descent</h2>
+<p><img alt="Slide 27" src="assets/week2/slide-27.png" /></p>
+<ul>
+<li>Example loss function for least squares: <code>L(w) = (1/n)Σ(xᵢᵀw − yᵢ)²</code>, optimize <code>w* = min_w L(w)</code>.</li>
+<li><strong>Gradient descent algorithm</strong>:
+  1. Randomly initialize w₀
+  2. For t = 0 to T: compute gradient gₜ = ∂L/∂w at wₜ; update <code>wₜ₊₁ = wₜ − α·gₜ</code></li>
+</ul>
+<p><img alt="Slide 28" src="assets/week2/slide-28.png" /></p>
+<ul>
+<li>Visual: the loss surface is a convex bowl shape — gradient descent walks downhill toward the minimum.</li>
+</ul>
+<p><img alt="Slide 29" src="assets/week2/slide-29.png" /></p>
+<ul>
+<li><strong>Variants of gradient descent</strong>: Stochastic Gradient Descent (SGD), SGD with momentum, RMSProp, ADAM, …</li>
+</ul>
+<p><img alt="Slide 30" src="assets/week2/slide-30.png" /></p>
+<ul>
+<li>Applied to least squares regression specifically:</li>
+<li>Gradient: <code>gₜ = X̄ᵀX̄w̄ₜ − X̄ᵀy</code></li>
+<li>Update: <code>w̄ₜ₊₁ = w̄ₜ − αₜ·gₜ</code></li>
+</ul>
+<hr />
+<h2 id="w2-polynomial-regression">Polynomial Regression</h2>
+<p><img alt="Slide 31" src="assets/week2/slide-31.png" /></p>
+<ul>
+<li><strong>Input</strong>: scalars x₁,…,xₙ and labels y₁,…,yₙ. <strong>Output</strong>: a function f(x) ≈ y.</li>
+<li>One-dimensional example: <code>f(x) = w₀ + w₁x + w₂x² + ⋯ + wₚxᵖ</code></li>
+<li>Procedure:
+  1. Define feature map <strong>φ(x)</strong> = [1, x, x², …, xᵖ]
+  2. Map each xⱼ → φ(xⱼ), stack into matrix <strong>Φ</strong> ∈ ℝⁿˣ⁽ᵖ⁺¹⁾
+  3. Solve least squares: <code>min_w ‖Φw − y‖₂²</code></li>
+<li>This is how linear models handle <strong>nonlinear</strong> relationships — by expanding the features, not the model form.</li>
+</ul>
+<hr />
+<h2 id="w2-training-and-testing">Training and Testing</h2>
+<p><img alt="Slide 32" src="assets/week2/slide-32.png" /></p>
+<ul>
+<li>Fitting the same data with different polynomial degrees:</li>
+<li><strong>Degree 1</strong>: underfits (too simple, misses the curve)</li>
+<li><strong>Degree 4</strong>: good fit</li>
+<li><strong>Degree 15</strong>: overfits (chases noise, wild oscillations)</li>
+</ul>
+<p><img alt="Slide 33" src="assets/week2/slide-33.png" /></p>
+<ul>
+<li><strong>Train</strong>: input = (xᵢ, yᵢ) pairs → output = function f such that f(xᵢ) ≈ yᵢ</li>
+<li><strong>Test</strong>: input = a <em>never-seen-before</em> feature vector x′ → predict its label via f(x′)</li>
+</ul>
+<p><img alt="Slide 34" src="assets/week2/slide-34.png" /></p>
+<ul>
+<li>Testing on an unseen point x′ shows why degree matters:</li>
+<li>Degree 1 → <strong>BAD</strong> (underfit prediction)</li>
+<li>Degree 4 → <strong>GOOD</strong> (fits true function well)</li>
+<li>Degree 15 → <strong>BAD</strong> (overfit, wildly wrong on new point)</li>
+</ul>
+<hr />
+<h2 id="w2-hyper-parameter-tuning">Hyper-Parameter Tuning</h2>
+<p><img alt="Slide 35" src="assets/week2/slide-35.png" /></p>
+<ul>
+<li>Question: how to choose the polynomial degree <strong>p</strong>?</li>
+<li>Answer: pick the <strong>p</strong> that gives the smallest <strong>test error</strong>.</li>
+<li>As model complexity increases: training error keeps dropping, but test error forms a <strong>U-shape</strong> — the goal is the minimum of the test curve.</li>
+</ul>
+<p><img alt="Slide 36" src="assets/week2/slide-36.png" /></p>
+<ul>
+<li>Example table (Test MSE by degree): degree 1→23.2, 2→19.0, 3→16.7, <strong>4→12.2 (best)</strong>, 5→14.8, 6→25.1, 7→39.4, 8→53.0.</li>
+</ul>
+<hr />
+<h2 id="w2-cross-validation">Cross-Validation</h2>
+<p><img alt="Slide 37" src="assets/week2/slide-37.png" /></p>
+<ul>
+<li><strong>Naive approach</strong>: split data into training samples (n), validation samples (n_val), and test samples (m) — tune hyper-parameters on the validation set, not the test set.</li>
+</ul>
+<p><img alt="Slide 38" src="assets/week2/slide-38.png" /></p>
+<ul>
+<li>Same idea in practice — note the <strong>Test Set label is crossed out and replaced with Validation Set</strong>: hyper-parameter selection must use validation error, never the true test set.</li>
+<li>Example validation MSEs: degree 1→23.1 … <strong>degree 4→12.5 (best)</strong> … degree 8→53.5.</li>
+</ul>
+<p><img alt="Slide 39" src="assets/week2/slide-39.png" /></p>
+<ul>
+<li><strong>k-Fold Cross-Validation</strong> procedure:
+  1. Propose a grid of hyper-parameters (e.g., p ∈ {1,2,3,4,5})
+  2. Randomly partition training samples into k parts (k−1 for training, 1 for test each round)
+  3. Average the k test errors → the <strong>validation error</strong>
+  4. Choose the hyper-parameter with the smallest validation error</li>
+</ul>
+<p><img alt="Slide 40" src="assets/week2/slide-40.png" /></p>
+<ul>
+<li><strong>10-fold cross-validation</strong> example: rotate which 1/10 slice is the test fold across 10 iterations (E₁…E₁₀), then average: <code>E = (1/10)ΣEᵢ</code>.</li>
+</ul>
+<p><img alt="Slide 41" src="assets/week2/slide-41.png" /></p>
+<ul>
+<li>Example result table: p=1→23.19, p=2→21.00, <strong>p=3→18.54 (best)</strong>, p=4→24.36, p=5→27.96.</li>
+</ul>
+<hr />
+<h2 id="w2-summary">Summary</h2>
+<p><img alt="Slide 42" src="assets/week2/slide-42.png" /></p>
+<ul>
+<li>Polynomial regression handles <strong>non-linear</strong> problems.</li>
+<li>It introduces a <strong>hyper-parameter p</strong> (the degree).</li>
+<li>Very small p → <strong>underfitting</strong>; very big p → <strong>overfitting</strong>.</li>
+<li>Tune hyper-parameters using <strong>cross-validation</strong>.</li>
+<li>Keep both model <strong>parameters</strong> and <strong>hyper-parameters</strong> independent of the test set!</li>
+</ul>
+<hr />
+<h2 id="w2-real-world-examples">Real-World Examples</h2>
+<p><img alt="Slide 43" src="assets/week2/slide-43.png" /></p>
+<ul>
+<li><strong>Forecasting sales</strong> — e.g. Amazon's item-to-item collaborative filtering for predicting future purchases.</li>
+<li><strong>Cash forecasting</strong> — predicting future cash on hand for budgeting/expense management.</li>
+<li><strong>Analyzing survey data</strong> — e.g. estimating customer satisfaction or likelihood to recommend a product.</li>
+<li><strong>Stock predictions</strong> — using past price/trend data to forecast performance.</li>
+<li><strong>Predicting consumer behavior</strong> — e.g. Walmart uses linear regression to predict regional product popularity.</li>
+<li><strong>Analysis of relationships between variables</strong> — e.g. how temperature affects ice cream sales.</li>
+<li>Reference video: https://www.youtube.com/watch?v=A_V5Y4d06WQ</li>
+</ul>
+<p><img alt="Slide 44" src="assets/week2/slide-44.png" /></p>
+<hr />
+<h2 id="w2-references">References</h2>
+<p><img alt="Slide 45" src="assets/week2/slide-45.png" /></p>
+<ul>
+<li>Lawrence, J. (1994). <em>Introduction to Neural Networks</em>. California Scientific Software Press.</li>
+<li>Michalski, R. S., Carbonell, J. G., &amp; Mitchell, T. M. (Eds.). (2013). <em>Machine Learning: An Artificial Intelligence Approach</em>. Springer.</li>
+<li>Goodfellow, I., Bengio, Y., &amp; Courville, A. (2016). <em>Deep Learning</em>. MIT Press.</li>
+<li>Samuel, A. L. (1959). <em>Some Studies in Machine Learning Using the Game of Checkers</em>. IBM Journal of Research and Development, 3(3), 210–229.</li>
+<li>https://github.com/wangshusen/DeepLearning</li>
+<li>https://cs229.stanford.edu</li>
+</ul>
+<hr />
+<p><em>La Trobe University — CRICOS Provider Code Number 00115M — © Copyright La Trobe University 2018</em></p>
+      </div>
+      <a class="back-top" href="#top">&uarr; Back to top</a>
+    </section>
+
+
+    <section class="week" id="week-3">
+      <div class="week-head">
+        <span class="week-tag">Week 3</span>
+        <h2>Binary Classification</h2>
+      </div>
+      <div class="week-body">
+        <p><strong>Dr. Peng Cheng — La Trobe University, 2026</strong></p>
+<p>A study-notes version of the lecture slides, with every slide image embedded alongside its key points.</p>
+<hr />
+<h2 id="w3-table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#w3-geometric-perspective">Geometric Perspective</a></li>
+<li><a href="#w3-binary-classification-basics">Binary Classification Basics</a></li>
+<li><a href="#w3-linear-classifier">Linear Classifier</a></li>
+<li><a href="#w3-directly-minimizing-classification-error">Directly Minimizing Classification Error</a></li>
+<li><a href="#w3-logistic-regression">Logistic Regression</a></li>
+<li><a href="#w3-vector-calculus-refresher">Vector Calculus Refresher</a></li>
+<li><a href="#w3-gradient-of-the-logistic-loss">Gradient of the Logistic Loss</a></li>
+<li><a href="#w3-gradient-descent-algorithm">Gradient Descent Algorithm</a></li>
+<li><a href="#w3-linear-regression-recap-gd--sgd">Linear Regression Recap: GD &amp; SGD</a></li>
+<li><a href="#w3-sgd-algorithm">SGD Algorithm</a></li>
+<li><a href="#w3-training-and-prediction">Training and Prediction</a></li>
+<li><a href="#w3-summary">Summary</a></li>
+<li><a href="#w3-evaluating-binary-classification">Evaluating Binary Classification</a></li>
+<li><a href="#w3-confusion-matrix">Confusion Matrix</a></li>
+<li><a href="#w3-precision-recall--f1">Precision, Recall &amp; F1</a></li>
+<li><a href="#w3-practice-questions">Practice Questions</a></li>
+<li><a href="#w3-references">References</a></li>
+</ol>
+<hr />
+<h2 id="w3-geometric-perspective">Geometric Perspective</h2>
+<p><img alt="Slide 2" src="assets/week3/slide-02.png" /></p>
+<ul>
+<li>ML inputs can usually be represented as <strong>points/vectors</strong> → ML becomes a geometric problem.</li>
+<li><strong>Regression</strong>: supervised learning, predicts a real-valued output from input(s) — like line/curve fitting.</li>
+<li><strong>Classification</strong>: supervised learning, predicts which class an input belongs to — like learning a linear/nonlinear separator (this lecture's focus).</li>
+</ul>
+<hr />
+<h2 id="w3-binary-classification-basics">Binary Classification Basics</h2>
+<p><img alt="Slide 3" src="assets/week3/slide-03.png" /></p>
+<ul>
+<li>Common real-world examples: <strong>credit card fraud detection</strong>, <strong>sentiment analysis</strong>.</li>
+<li>Simple mental model: an email → a Machine Learning model → <strong>SPAM</strong> or <strong>NOT SPAM</strong>.</li>
+</ul>
+<p><img alt="Slide 4" src="assets/week3/slide-04.png" /></p>
+<ul>
+<li>Binary classification = classifying elements into <strong>two groups</strong> based on a classification rule.</li>
+<li>Convention used: classes '0' (blue) and '1' (orange).</li>
+<li>A graph of two features can separate classes visually — e.g. clustered blobs, or two overlapping groups separable by a line (dashed red).</li>
+</ul>
+<p><img alt="Slide 5" src="assets/week3/slide-05.png" /></p>
+<ul>
+<li><strong>Separating hyperplane</strong>: the decision boundary that divides classes — simple to describe even in higher dimensions.</li>
+<li><strong>Logistic Regression Model</strong> (conceptual): inputs X1, X2, X3 with weights θ1, θ2, θ3 combine to output a binary decision (e.g., "Happy" or "Sad").</li>
+</ul>
+<hr />
+<h2 id="w3-linear-classifier">Linear Classifier</h2>
+<p><img alt="Slide 6" src="assets/week3/slide-06.png" /></p>
+<ul>
+<li>Divider slide: <strong>Logistic Regression (Linear Classifier)</strong> — situates it within the Tasks → <strong>Methods</strong> → Algorithms framework.</li>
+</ul>
+<p><img alt="Slide 7" src="assets/week3/slide-07.png" /></p>
+<ul>
+<li>A <strong>hyperplane</strong>: <code>wᵀx + b = 0</code> separates the two classes.</li>
+<li>Absorb the bias into the weight vector (same trick as in linear regression):</li>
+<li>x̄ⱼ = [xⱼ; 1] ∈ ℝᵈ⁺¹, w̄ = [w; b] ∈ ℝᵈ⁺¹</li>
+<li>→ <code>xⱼᵀw + b = x̄ⱼᵀw̄</code></li>
+</ul>
+<p><img alt="Slide 8" src="assets/week3/slide-08.png" /></p>
+<ul>
+<li>Equivalent hyperplane forms:</li>
+<li><code>wᵀx + b = 0</code>  ⟺  <code>w̄ᵀx̄ = 0</code> (intercept removed by the augmented-vector trick).</li>
+</ul>
+<p><img alt="Slide 9" src="assets/week3/slide-09.png" /></p>
+<ul>
+<li>Goal: learn a vector <strong>w</strong> such that if <code>yⱼ = +1</code>, then <code>wᵀxⱼ &gt; 0</code>.</li>
+</ul>
+<p><img alt="Slide 10" src="assets/week3/slide-10.png" /></p>
+<ul>
+<li>Full rule: if <code>yⱼ = +1</code> then <code>wᵀxⱼ &gt; 0</code>; if <code>yⱼ = −1</code> then <code>wᵀxⱼ &lt; 0</code>.</li>
+</ul>
+<p><img alt="Slide 11" src="assets/week3/slide-11.png" /></p>
+<ul>
+<li><strong>Key idea</strong>: encourage <code>yⱼ·wᵀxⱼ</code> to be <strong>positive</strong> for every training example — this single quantity captures whether a point is correctly classified.</li>
+</ul>
+<hr />
+<h2 id="w3-directly-minimizing-classification-error">Directly Minimizing Classification Error</h2>
+<p><img alt="Slide 12" src="assets/week3/slide-12.png" /></p>
+<ul>
+<li>Naive objective: <code>Minimize Σⱼ h(yⱼwᵀxⱼ)</code>, where <code>h(z) = 1 if z &lt; 0, else 0</code>.</li>
+<li>This objective directly counts the <strong>number of misclassified training samples</strong>.</li>
+</ul>
+<p><img alt="Slide 13" src="assets/week3/slide-13.png" /></p>
+<ul>
+<li>Problem: <code>h(z)</code> is a <strong>step function</strong> — it's <strong>nonsmooth, nonconvex, and hard to optimize</strong> (no useful gradient information).</li>
+<li>This motivates replacing <code>h(z)</code> with a smooth surrogate loss.</li>
+</ul>
+<hr />
+<h2 id="w3-logistic-regression">Logistic Regression</h2>
+<p><img alt="Slide 14" src="assets/week3/slide-14.png" /></p>
+<ul>
+<li>Replace the hard step function with the smooth <strong>logistic loss</strong>:
+  <code>l(z) = log(1 + e^(−z))</code></li>
+<li><code>l(z)</code> is a smooth, differentiable upper bound on the step function <code>h(z)</code>, and still encourages <code>yⱼwᵀxⱼ</code> to be positive.</li>
+</ul>
+<p><img alt="Slide 15" src="assets/week3/slide-15.png" /></p>
+<ul>
+<li><strong>Logistic regression</strong> objective:
+  <code>min_w (1/n)Σⱼ l(yⱼwᵀxⱼ)</code>, where <code>l(z) = log(1 + e^(−z))</code></li>
+<li>Framework: <strong>Task</strong> (Binary / Multi-Class Classification) → <strong>Methods</strong> (Logistic Regression, SVM, Neural Networks) → <strong>Algorithms</strong> (Gradient Descent, Accelerated GD, Stochastic GD).</li>
+</ul>
+<hr />
+<h2 id="w3-vector-calculus-refresher">Vector Calculus Refresher</h2>
+<p><img alt="Slide 16" src="assets/week3/slide-16.png" /></p>
+<ul>
+<li><strong>Derivative of scalar w.r.t. scalar</strong> — examples:</li>
+<li><code>y = x²</code> → <code>dy/dx = 2x</code></li>
+<li><code>y = eˣ</code> → <code>dy/dx = eˣ</code></li>
+</ul>
+<p><img alt="Slide 17" src="assets/week3/slide-17.png" /></p>
+<ul>
+<li><strong>Derivative of scalar w.r.t. vector</strong>: <code>∂y/∂x = [∂y/∂x₁, …, ∂y/∂xₘ]ᵀ</code></li>
+<li>Example 1: <code>y = ‖x‖₂² = Σxᵢ²</code> → <code>∂y/∂x = 2x</code></li>
+</ul>
+<p><img alt="Slide 18" src="assets/week3/slide-18.png" /></p>
+<ul>
+<li>Example 2: <code>y = xᵀz = Σxᵢzᵢ</code> → <code>∂y/∂x = z</code></li>
+</ul>
+<p><img alt="Slide 19" src="assets/week3/slide-19.png" /></p>
+<ul>
+<li>Example 3: <code>y = Σlog(1+e^(−xᵢ))</code> → <code>∂y/∂x = [−1/(1+e^(x₁)), …, −1/(1+e^(xₘ))]</code></li>
+</ul>
+<p><img alt="Slide 20" src="assets/week3/slide-20.png" /></p>
+<ul>
+<li><strong>Chain rule</strong>: if <strong>z</strong> is a function of <strong>y</strong>, and <strong>y</strong> is a function of <strong>x</strong>, then
+  <code>dz/dx = (dy/dx)(dz/dy)</code>, with matching dimensions (nₓ×n_y and n_y×n_z).</li>
+</ul>
+<hr />
+<h2 id="w3-gradient-of-the-logistic-loss">Gradient of the Logistic Loss</h2>
+<p><img alt="Slide 21" src="assets/week3/slide-21.png" /></p>
+<ul>
+<li>Setup: <code>z = y·wᵀx</code>, <code>l = log(1+e^(−z))</code>.</li>
+<li><code>∂z/∂w = yx</code>, <code>∂l(z)/∂z = −e^(−z)/(1+e^(−z)) = −1/(1+eᶻ)</code>.</li>
+<li>Chain rule: <code>∂l/∂w = (yx)(−1/(1+eᶻ)) = −yx / (1+exp(ywᵀx))</code>.</li>
+</ul>
+<p><em>(Slide 22 repeats this same derivation.)</em></p>
+<p><img alt="Slide 23" src="assets/week3/slide-23.png" /></p>
+<ul>
+<li>Gradient at <strong>wₜ</strong> for the full logistic regression objective:
+  <code>gₜ = (1/n)Σⱼ [−yⱼxⱼ / (1+exp(yⱼwₜᵀxⱼ))]</code></li>
+<li>This follows directly from applying the per-example gradient formula and averaging over all n samples.</li>
+</ul>
+<hr />
+<h2 id="w3-gradient-descent-algorithm">Gradient Descent Algorithm</h2>
+<p><img alt="Slide 24" src="assets/week3/slide-24.png" /></p>
+<ul>
+<li><strong>GD repeat</strong>:
+  1. Compute gradient <strong>gₜ</strong>
+  2. Update: <code>wₜ₊₁ = wₜ − α·gₜ</code></li>
+<li><strong>α</strong> is the step size / <strong>learning rate</strong> — needs to be tuned.</li>
+</ul>
+<p><img alt="Slide 25" src="assets/week3/slide-25.png" /></p>
+<ul>
+<li>Recap from linear regression: loss <code>L(w) = (1/n)Σ(xᵢᵀw − yᵢ)²</code>, optimize <code>w* = min_w L(w)</code>.</li>
+<li><strong>Variants of gradient descent</strong>: SGD, SGD with momentum, RMSProp, ADAM, …</li>
+</ul>
+<hr />
+<h2 id="w3-linear-regression-recap-gd--sgd">Linear Regression Recap: GD &amp; SGD</h2>
+<p><img alt="Slide 26" src="assets/week3/slide-26.png" /></p>
+<ul>
+<li>Least squares regression, solved via GD:</li>
+<li>Gradient: <code>2(X̄ᵀX̄w̄ − X̄ᵀy) = 0</code></li>
+<li>GD repeats: compute <code>gₜ = X̄ᵀX̄w̄ₜ − X̄ᵀy</code>, update <code>w̄ₜ₊₁ = w̄ₜ − αₜgₜ</code></li>
+</ul>
+<hr />
+<h2 id="w3-sgd-algorithm">SGD Algorithm</h2>
+<p><img alt="Slide 27" src="assets/week3/slide-27.png" /></p>
+<ul>
+<li>Stochastic gradient: <code>g̃ₜ,ⱼ = −yⱼxⱼ / (1+exp(yⱼwₜᵀxⱼ))</code> for a single sample j.</li>
+<li>The stochastic gradient is close to the full gradient in expectation: <code>gₜ = E_j[g̃ₜ,ⱼ]</code>, where j is randomly sampled from {1,…,n}.</li>
+</ul>
+<p><img alt="Slide 28" src="assets/week3/slide-28.png" /></p>
+<ul>
+<li><strong>SGD repeats</strong>:
+  1. Randomly draw j from {1,…,n}
+  2. Compute the stochastic gradient <code>g̃ₜ,ⱼ</code>
+  3. Update: <code>wₜ₊₁ = wₜ − α·g̃ₜ,ⱼ</code></li>
+<li>Per-iteration time complexity is <strong>O(d)</strong> — much cheaper than full-batch GD's O(nd).</li>
+</ul>
+<p><img alt="Slide 29" src="assets/week3/slide-29.png" /></p>
+<ul>
+<li><strong>GD vs SGD</strong> convergence behaviour: GD converges smoothly; SGD is noisier ("jagged") per step but each step is far cheaper — over epochs both approach <code>w*</code>.</li>
+</ul>
+<hr />
+<h2 id="w3-training-and-prediction">Training and Prediction</h2>
+<p><img alt="Slide 30" src="assets/week3/slide-30.png" /></p>
+<ul>
+<li><strong>Training</strong>: <code>w* = argmin_w Σⱼ l(yⱼwᵀxⱼ)</code>, where <code>l(z) = log(1+e^(−z))</code>.</li>
+<li><strong>Prediction</strong>: for a new test feature vector x′ ∈ ℝᵈ, predict via <code>sign(x′ᵀw*)</code>.</li>
+</ul>
+<hr />
+<h2 id="w3-summary">Summary</h2>
+<p><img alt="Slide 31" src="assets/week3/slide-31.png" /></p>
+<ul>
+<li>Logistic regression model for <strong>linear binary</strong> classification: <code>w* = argmin_w Σⱼ l(yⱼwᵀxⱼ)</code>.</li>
+<li>Compute the gradient using <strong>vector derivatives and the chain rule</strong>.</li>
+<li>Gradient-based algorithms: <strong>GD, AGD, SGD</strong>, etc.</li>
+<li>Make predictions using <code>sign(x′ᵀw*)</code>.</li>
+</ul>
+<hr />
+<h2 id="w3-evaluating-binary-classification">Evaluating Binary Classification</h2>
+<p><img alt="Slide 32" src="assets/week3/slide-32.png" /></p>
+<ul>
+<li><strong>Error Rate</strong> = (# Classification Errors) / (# Samples)</li>
+<li><strong>Accuracy</strong> = 1 − Error Rate</li>
+<li>⚠️ Error rate and accuracy are <strong>not meaningful</strong> in <strong>class-imbalanced</strong> problems.</li>
+</ul>
+<p><img alt="Slide 33" src="assets/week3/slide-33.png" /></p>
+<ul>
+<li>Visual: two classes <code>y = −1</code> (blue) and <code>y = +1</code> (red), separated by a decision boundary — some points fall on the "wrong" side.</li>
+</ul>
+<p><img alt="Slide 34" src="assets/week3/slide-34.png" /></p>
+<ul>
+<li><strong>The Confusion Matrix</strong> (Predicted vs. Actual):</li>
+<li><strong>True Positive</strong> / <strong>False Positive</strong> (Type I Error)</li>
+<li><strong>False Negative</strong> (Type II Error) / <strong>True Negative</strong></li>
+</ul>
+<p><img alt="Slide 35" src="assets/week3/slide-35.png" /></p>
+<ul>
+<li>Applied to the spam example (spam = positive, non-spam = negative):</li>
+<li><strong>False Positive Rate (FPR)</strong> = #FP / (#FP + #TN)</li>
+<li><strong>True Positive Rate (TPR)</strong> = #TP / (#TP + #FN)</li>
+</ul>
+<hr />
+<h2 id="w3-confusion-matrix">Confusion Matrix</h2>
+<p><img alt="Slide 36" src="assets/week3/slide-36.png" /></p>
+<ul>
+<li><strong>True Positives (TP)</strong>: actual positive, predicted positive.</li>
+<li><strong>True Negatives (TN)</strong>: actual negative, predicted negative.</li>
+<li><strong>False Positives (FP)</strong>: actual negative, predicted positive — <strong>Type 1 error</strong>.</li>
+<li><strong>False Negatives (FN)</strong>: actual positive, predicted negative — <strong>Type 2 error</strong>.</li>
+<li>For binary classification, this forms a 2×2 matrix (Predicted × Actual).</li>
+</ul>
+<p><img alt="Slide 37" src="assets/week3/slide-37.png" /></p>
+<ul>
+<li>Worked cat/dog example (20 samples total):</li>
+<li>TP = 6, FN = 1, FP = 2, TN = 11</li>
+</ul>
+<p><img alt="Slide 38" src="assets/week3/slide-38.png" /></p>
+<ul>
+<li><strong>Accuracy</strong> — valid when classes are <strong>well balanced</strong> (no class imbalance):</li>
+<li><code>Accuracy = (TP+TN) / (TP+TN+FP+FN) = (6+11) / 20 = 85%</code></li>
+</ul>
+<hr />
+<h2 id="w3-precision-recall--f1">Precision, Recall &amp; F1</h2>
+<p><img alt="Slide 39" src="assets/week3/slide-39.png" /></p>
+<ul>
+<li><strong>Precision</strong> = TP / (TP+FP) — of all predicted positives, how many were actually correct.</li>
+<li>Ideally 1 (high). Useful when <strong>False Positives</strong> are a bigger concern than False Negatives.</li>
+<li>Worked example: <code>Precision = 6/(6+2) = 0.75</code></li>
+</ul>
+<p><img alt="Slide 40" src="assets/week3/slide-40.png" /></p>
+<ul>
+<li><strong>Recall</strong> = TP / (TP+FN) — of all actual positives, how many were correctly identified.</li>
+<li>Ideally 1 (high). Useful when <strong>False Negatives</strong> are a bigger concern than False Positives.</li>
+<li>Worked example: <code>Recall = 6/(6+1) = 0.85</code></li>
+</ul>
+<p><img alt="Slide 41" src="assets/week3/slide-41.png" /></p>
+<ul>
+<li><strong>F1 Score</strong> = harmonic mean of Precision and Recall (not a simple average, since harmonic mean is less sensitive to extreme values):
+  <code>F1 = 2 × (Recall × Precision) / (Recall + Precision)</code></li>
+<li>Worked example: <code>F1 = 2 × (0.85×0.75)/(0.85+0.75) = 0.79</code></li>
+<li>Balances precision and recall into one number when there's no clear priority between the two; improving one often lowers the other.</li>
+</ul>
+<hr />
+<h2 id="w3-practice-questions">Practice Questions</h2>
+<p><img alt="Slide 42" src="assets/week3/slide-42.png" /></p>
+<ol>
+<li>
+<p><strong>Why is logistic loss commonly used instead of directly minimizing the number of classification errors?</strong>
+   A. Logistic loss always produces zero training error.
+   B. Logistic loss is smooth and easier to optimize using gradient-based methods.
+   C. Logistic loss does not require labelled data.
+   D. Logistic loss can only be used with stochastic gradient descent.</p>
+</li>
+<li>
+<p><strong>A spam classifier produces 30 true positives, 10 false positives, 5 false negatives and 55 true negatives. What is its precision?</strong>
+   A. 66.7% B. 75.0% C. 85.7% D. 94.4%</p>
+</li>
+<li>
+<p><strong>Which statement correctly describes stochastic gradient descent (SGD)?</strong>
+   A. SGD calculates the gradient using the entire training dataset in every iteration.
+   B. SGD randomly selects a training sample and uses its gradient to update the model.
+   C. SGD does not require a learning rate.
+   D. SGD always reaches the optimal solution in one iteration.</p>
+</li>
+</ol>
+<hr />
+<h2 id="w3-references">References</h2>
+<p><img alt="Slide 43" src="assets/week3/slide-43.png" /></p>
+<ul>
+<li>Lawrence, J. (1994). <em>Introduction to Neural Networks</em>. California Scientific Software Press.</li>
+<li>Michalski, R. S., Carbonell, J. G., &amp; Mitchell, T. M. (Eds.). (2013). <em>Machine Learning: An Artificial Intelligence Approach</em>. Springer.</li>
+<li>Goodfellow, I., Bengio, Y., &amp; Courville, A. (2016). <em>Deep Learning</em>. MIT Press.</li>
+<li>Samuel, A. L. (1959). <em>Some Studies in Machine Learning Using the Game of Checkers</em>. IBM Journal of Research and Development, 3(3), 210–229.</li>
+<li>https://github.com/wangshusen/DeepLearning</li>
+<li>https://cs229.stanford.edu</li>
+</ul>
+<hr />
+<p><em>La Trobe University — CRICOS Provider Code Number 00115M — © Copyright La Trobe University 2018</em></p>
+      </div>
+      <a class="back-top" href="#top">&uarr; Back to top</a>
+    </section>
+
+
+    <section class="week" id="week-4">
+      <div class="week-head">
+        <span class="week-tag">Week 4</span>
+        <h2>SVM and Multi-Class Classification</h2>
+      </div>
+      <div class="week-body">
+        <p><strong>Lecturer:</strong> Dr. Peng Cheng — La Trobe University, 2026</p>
+<hr />
+<h2 id="w4-table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#w4-1-linear-classification">Linear Classification</a></li>
+<li><a href="#w4-2-support-vector-machines-svm">Support Vector Machines (SVM)</a></li>
+<li><a href="#w4-3-deriving-the-svm-optimization-problem">Deriving the SVM Optimization Problem</a></li>
+<li><a href="#w4-4-soft-margin-svm-inseparable-data">Soft-Margin SVM (Inseparable Data)</a></li>
+<li><a href="#w4-5-svm-vs-logistic-regression">SVM vs. Logistic Regression</a></li>
+<li><a href="#w4-6-homework-the-kernel-trick">Homework: The Kernel Trick</a></li>
+<li><a href="#w4-7-svm-applications">SVM Applications</a></li>
+<li><a href="#w4-8-multi-class-classification">Multi-Class Classification</a></li>
+<li><a href="#w4-9-the-softmax-classifier">The Softmax Classifier</a></li>
+<li><a href="#w4-10-limitations-of-the-softmax-classifier">Limitations of the Softmax Classifier</a></li>
+<li><a href="#w4-11-self-check-quiz">Self-Check Quiz</a></li>
+<li><a href="#w4-12-references">References</a></li>
+</ol>
+<hr />
+<h2 id="w4-1-linear-classification">1. Linear Classification</h2>
+<p>A dataset is <strong>linearly separable</strong> if a straight line (2D), plane (3D), or hyperplane (higher-D) can split the classes with zero errors.</p>
+<p><img alt="Linear separability examples" src="assets/week4/slide-02.png" /></p>
+<p>A <strong>linear classifier</strong> has the form:</p>
+<pre><code>f(x) = wᵀx + b
+</code></pre>
+<ul>
+<li>In 2D, the discriminant <code>f(x) = 0</code> is a <strong>line</strong>.</li>
+<li><strong>w</strong> is the <em>normal</em> to the line, <strong>b</strong> is the <em>bias</em>.</li>
+<li><strong>w</strong> is called the <strong>weight vector</strong>.</li>
+<li>Points are classified by the sign of <code>f(x)</code>: <code>f(x) &gt; 0</code> on one side, <code>f(x) &lt; 0</code> on the other.</li>
+</ul>
+<p><img alt="Linear classifier in 2D" src="assets/week4/slide-03.png" /></p>
+<p>In higher dimensions, the discriminant becomes a <strong>hyperplane</strong>. Only <strong>w</strong> (and b) are needed to classify new data once learned from training data.</p>
+<p><img alt="Linear classifier in 3D — hyperplane" src="assets/week4/slide-04.png" /></p>
+<hr />
+<h2 id="w4-2-support-vector-machines-svm">2. Support Vector Machines (SVM)</h2>
+<p><strong>Key idea:</strong> among all hyperplanes that separate the data, the <em>best</em> one <strong>maximizes the margin</strong> — this makes the decision boundary most stable to small perturbations in the input data.</p>
+<p><img alt="Maximizing the margin" src="assets/week4/slide-05.png" /></p>
+<h3 id="w4-projecting-a-point-onto-a-hyperplane">Projecting a Point onto a Hyperplane</h3>
+<p>Given hyperplane <code>wᵀx + b = 0</code>, the projection of point <strong>z</strong> onto it is:</p>
+<pre><code>x = z − ((wᵀz + b) / ||w||₂²) · w
+</code></pre>
+<p>The <strong>ℓ₂ distance</strong> from z to the hyperplane is:</p>
+<pre><code>||z − x||₂ = |wᵀz + b| / ||w||₂
+</code></pre>
+<p><img alt="Projecting a point onto a hyperplane" src="assets/week4/slide-06.png" /></p>
+<ul>
+<li>First introduced in 1963 (Vapnik); the <strong>kernel</strong> extension came in 1992 (also Vapnik).</li>
+<li>SVM is a very strong "off-the-shelf" supervised learning technique.</li>
+</ul>
+<p><img alt="SVM background" src="assets/week4/slide-07.png" /></p>
+<h3 id="w4-the-svm-idea">The SVM Idea</h3>
+<p>SVM directly learns the hyperplane that maximizes the margin — positioning it so the separating "street" between classes is as wide as possible.</p>
+<p><img alt="Arbitrary hyperplane vs. max-margin hyperplane" src="assets/week4/slide-08.png" /></p>
+<hr />
+<h2 id="w4-3-deriving-the-svm-optimization-problem">3. Deriving the SVM Optimization Problem</h2>
+<p>Labels: positive samples <code>yⱼ = +1</code>, negative samples <code>yⱼ = −1</code>.</p>
+<p>The distance from any feature vector <strong>x</strong> to the hyperplane:</p>
+<pre><code>dist = |wᵀx + b| / ||w||₂
+</code></pre>
+<p>The <strong>margin</strong> is the <em>smallest</em> such distance over all training points:</p>
+<pre><code>margin = min_j  yⱼ(wᵀxⱼ + b) / ||w||₂
+</code></pre>
+<p><img alt="Margin definition" src="assets/week4/slide-09.png" /></p>
+<p>Using the shorthand <code>x̄ⱼ = [xⱼ; 1]</code> and <code>w̄ = [w, b]</code>, we can fold the bias into the weight vector: <code>xⱼᵀw + b = x̄ⱼᵀw̄</code>.</p>
+<p><img alt="Homogeneous coordinates trick" src="assets/week4/slide-10.png" /></p>
+<p>The SVM problem becomes:</p>
+<pre><code>max_w  min_j  yⱼ wᵀxⱼ / ||w||₂
+</code></pre>
+<p><img alt="SVM as a max-min problem" src="assets/week4/slide-11.png" /></p>
+<h3 id="w4-simplifying-to-a-convex-program">Simplifying to a Convex Program</h3>
+<p>By fixing the scale so that <code>min_j yⱼwᵀxⱼ = 1</code>, the max-min problem reduces step by step to a clean <strong>quadratic program</strong>:</p>
+<pre><code>argmin_w  ||w||₂²      s.t.   yⱼwᵀxⱼ ≥ 1   for all j
+</code></pre>
+<p><img alt="Step-by-step derivation" src="assets/week4/slide-12.png" /></p>
+<p>This is the standard <strong>(hard-margin) SVM formulation</strong>:</p>
+<pre><code>min_w ||w||₂²     s.t.  yⱼwᵀxⱼ ≥ 1  for all j ∈ {1, ..., n}
+</code></pre>
+<p><img alt="Equivalent form of SVM" src="assets/week4/slide-13.png" /></p>
+<hr />
+<h2 id="w4-4-soft-margin-svm-inseparable-data">4. Soft-Margin SVM (Inseparable Data)</h2>
+<p><strong>What if the data isn't linearly separable?</strong> Some points will inevitably fall inside the margin or on the wrong side.</p>
+<p><img alt="Inseparable data — outlier inside the margin" src="assets/week4/slide-14.png" /></p>
+<ul>
+<li>If <code>yⱼwᵀxⱼ &gt; 1</code> → point is safely outside the margin.</li>
+<li>If <code>yⱼwᵀxⱼ &lt; 0</code> → point <strong>violates the constraint</strong> (misclassified).</li>
+</ul>
+<p><img alt="Constraint violation example" src="assets/week4/slide-15.png" /></p>
+<h3 id="w4-relaxing-with-slack-variables">Relaxing with Slack Variables</h3>
+<p>We introduce a <strong>slack variable</strong> <code>ξⱼ</code> per point and <em>penalize</em> violations instead of forbidding them outright:</p>
+<pre><code>min_{w, ξⱼ}  ||w||₂² + λ Σⱼ [ξⱼ]₊     s.t.  1 − yⱼwᵀxⱼ = ξⱼ
+</code></pre>
+<ul>
+<li><code>[ξⱼ]₊ = max{ξⱼ, 0}</code></li>
+<li><code>ξⱼ ≤ 0</code> → constraint satisfied → <strong>no penalty</strong></li>
+<li><code>ξⱼ &gt; 0</code> → constraint violated → <strong>penalize</strong> by <code>ξⱼ</code></li>
+</ul>
+<p><img alt="Relaxing the hard constraint with slack" src="assets/week4/slide-16.png" /></p>
+<p>This is algebraically <strong>equivalent</strong> to the unconstrained <strong>hinge-loss</strong> formulation:</p>
+<pre><code>min_{w, b}  ||w||₂² + λ Σⱼ [1 − yⱼwᵀxⱼ]₊
+</code></pre>
+<p><img alt="Equivalent hinge-loss form" src="assets/week4/slide-17.png" /></p>
+<hr />
+<h2 id="w4-5-svm-vs-logistic-regression">5. SVM vs. Logistic Regression</h2>
+<p>Generalized form: <code>min_w ||w||₂² + λ Σⱼ g(yⱼwᵀxⱼ)</code></p>
+<table>
+<thead>
+<tr>
+<th>Loss</th>
+<th>Formula</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Hinge loss</strong> (SVM)</td>
+<td><code>g(z) = [1 − z]₊</code></td>
+</tr>
+<tr>
+<td><strong>Hard thresholding</strong></td>
+<td><code>h(z) = 1 if z&lt;0, else 0</code></td>
+</tr>
+<tr>
+<td><strong>Logistic loss</strong></td>
+<td><code>l(z) = log(1 + e^(−z))</code></td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Comparing hinge, logistic, and hard-threshold losses" src="assets/week4/slide-18.png" /></p>
+<p><strong>Key comparisons:</strong></p>
+<ul>
+<li><strong>Convexity</strong> — both hinge loss and logistic loss are convex, so global optima can be found efficiently.</li>
+<li><strong>Smoothness</strong> — hinge loss is <em>non-smooth</em> (kink at z=1); logistic loss is <em>smooth</em> everywhere.</li>
+<li><strong>Optimization</strong> — logistic regression is easier to solve: gradient descent has <strong>linear convergence</strong>, while standard SVM algorithms only have <strong>sub-linear convergence</strong>.</li>
+</ul>
+<p><img alt="Convexity, smoothness, and convergence comparison" src="assets/week4/slide-19.png" /></p>
+<h3 id="w4-visual-demo">Visual Demo</h3>
+<p><img alt="SVM margin illustration with support vectors" src="assets/week4/slide-20.png" /></p>
+<blockquote>
+<p>Reference video: <a href="https://www.youtube.com/watch?v=N-sPSXDtcQw&amp;ab_channel=MATLAB">MATLAB — Support Vector Machines</a></p>
+</blockquote>
+<hr />
+<h2 id="w4-6-homework-the-kernel-trick">6. Homework: The Kernel Trick</h2>
+<p>For data that is <strong>not linearly separable</strong> in its original space, a <strong>kernel</strong> maps it into a higher-dimensional space where a linear (hyperplane) separator <em>does</em> work — this hyperplane maps back to a non-linear <strong>decision surface</strong> in the original space.</p>
+<p><img alt="Kernel trick — mapping to higher dimensions" src="assets/week4/slide-21.png" /></p>
+<p>📺 Homework: watch <strong><a href="https://www.youtube.com/watch?v=N-sPSXDtcQw">"The Kernel Trick in SVM — In 3 min"</a></strong> and review the concept before next lecture.</p>
+<p><img alt="The Kernel Trick homework video" src="assets/week4/slide-22.png" /></p>
+<hr />
+<h2 id="w4-7-svm-applications">7. SVM Applications</h2>
+<ul>
+<li><strong>Face detection</strong> — classify image regions as face / non-face, draw a bounding box.</li>
+<li><strong>Text and hypertext categorization</strong> — classify documents into categories (inductive &amp; transductive), scored against a threshold.</li>
+<li><strong>Image classification</strong> — better search accuracy than traditional query-based methods.</li>
+<li><strong>Bioinformatics</strong> — protein classification, cancer classification, gene-based patient classification.</li>
+<li><strong>Protein fold and remote homology detection.</strong></li>
+<li><strong>Handwriting recognition.</strong></li>
+<li><strong>Generalized Predictive Control (GPC)</strong> — SVM-based GPC for controlling chaotic dynamics.</li>
+</ul>
+<hr />
+<h2 id="w4-8-multi-class-classification">8. Multi-Class Classification</h2>
+<p>Framework: <strong>Tasks → Methods → Algorithms</strong></p>
+<p><strong>Example 1 — Face recognition:</strong> number of classes = number of people.</p>
+<p><img alt="Face recognition — multi-class example" src="assets/week4/slide-24.png" /></p>
+<p><strong>Example 2 — Handwritten digit recognition:</strong> number of classes = 10 (digits 0–9).</p>
+<p><img alt="Digit recognition — multi-class example" src="assets/week4/slide-25.png" /></p>
+<h3 id="w4-one-hot-encoding">One-Hot Encoding</h3>
+<p>With <code>K</code> classes, a scalar label <code>y</code> is converted into a <code>K</code>-dimensional one-hot vector. E.g. for <code>K = 10</code>, <code>y = 3</code> becomes:</p>
+<pre><code>y = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0]ᵀ ∈ {1,0}¹⁰
+</code></pre>
+<p><img alt="One-hot encoding example" src="assets/week4/slide-26.png" /></p>
+<hr />
+<h2 id="w4-9-the-softmax-classifier">9. The Softmax Classifier</h2>
+<h3 id="w4-softmax-function">Softmax Function</h3>
+<p>Given a score vector <code>φ ∈ ℝᴷ</code>, softmax converts it into a probability distribution <code>p = SoftMax(φ) ∈ ℝᴷ</code>:</p>
+<pre><code>pₖ = exp(φₖ) / Σⱼ exp(φⱼ),   for k = 1, ..., K
+</code></pre>
+<p>It squashes an arbitrary vector of scores into positive values that sum to 1 — peaks are emphasized, valleys are suppressed.</p>
+<p><img alt="Softmax function example" src="assets/week4/slide-27.png" /></p>
+<h3 id="w4-cross-entropy-loss">Cross-Entropy Loss</h3>
+<p>Both <strong>y</strong> (one-hot label) and <strong>p</strong> (predicted distribution) are <code>K</code>-dim, non-negative, and sum to 1.</p>
+<p><strong>Cross-entropy</strong> measures the dissimilarity between them:</p>
+<pre><code>H(y, p) = −Σₗ yₗ log(pₗ)
+</code></pre>
+<p>(In practice this could be replaced by <code>||y − p||₂²</code> or <code>||y − p||₁</code>, but cross-entropy tends to work better.)</p>
+<p><img alt="Cross-entropy formula" src="assets/week4/slide-28.png" /></p>
+<h3 id="w4-model-formulation">Model Formulation</h3>
+<p><strong>Input:</strong> feature vectors <code>x₁, ..., xₙ ∈ ℝᵈ</code> and labels <code>y₁, ..., yₙ ∈ ℝᴷ</code> (one-hot encoded if originally scalar).</p>
+<p><img alt="Softmax classifier — model formulation" src="assets/week4/slide-29.png" /></p>
+<p><strong>Step 1 — Linear scoring:</strong></p>
+<pre><code>φ = Wx ∈ ℝᴷ         (W is K×d, x is d×1, φ is K×1)
+</code></pre>
+<p><img alt="Score vector φ = Wx" src="assets/week4/slide-30.png" /></p>
+<p>Each entry <code>φₖ</code> indicates how likely <strong>x</strong> belongs to class <em>k</em>. Example: the highest score (15) picks out digit "3" as most probable, well above the next-highest (13.1 for digit "8").</p>
+<p><img alt="Interpreting φ scores — digit example" src="assets/week4/slide-31.png" /></p>
+<p><strong>Step 2 — Softmax → probabilities:</strong> <code>p₁ + ... + p_K = 1</code>, so <strong>p</strong> is a valid probability distribution over classes.</p>
+<p><img alt="Softmax turns scores into a distribution" src="assets/week4/slide-32.png" /></p>
+<p><strong>Step 3 — Cross-entropy loss:</strong> <code>H(y, p) = −Σₖ yₖ log(pₖ)</code></p>
+<p><img alt="Full pipeline: scores → softmax → cross-entropy" src="assets/week4/slide-33.png" /></p>
+<h3 id="w4-full-pipeline">Full Pipeline</h3>
+<pre><code>x  --(Wx)--&gt;  φ  --(Softmax)--&gt;  p  --(vs. y)--&gt;  H(y,p) = Loss
+</code></pre>
+<p><img alt="Full pipeline diagram" src="assets/week4/slide-34.png" /></p>
+<h3 id="w4-putting-it-all-together">Putting It All Together</h3>
+<p><strong>Softmax classifier training objective:</strong></p>
+<pre><code>min_W  Σᵢ H(yᵢ, pᵢ)
+where  φᵢ = Wxᵢ,   pᵢ = SoftMax(φᵢ),   H(yᵢ,pᵢ) = −Σₖ yᵢ,ₖ log(pᵢ,ₖ)
+</code></pre>
+<p><img alt="Softmax classifier objective" src="assets/week4/slide-35.png" /></p>
+<ul>
+<li>Minimizing <code>H(yᵢ, pᵢ)</code> pushes <code>pᵢ</code> to look like <code>yᵢ</code> (i.e., predicted probabilities → correct one-hot label).</li>
+<li>Could substitute <code>||yᵢ − pᵢ||₂²</code>, but <strong>cross-entropy works better in practice</strong>.</li>
+</ul>
+<p><img alt="Role of minimizing cross-entropy" src="assets/week4/slide-36.png" /></p>
+<hr />
+<h2 id="w4-10-limitations-of-the-softmax-classifier">10. Limitations of the Softmax Classifier</h2>
+<p>The number of <strong>trainable parameters</strong> in <code>W</code> (size <code>K × d</code>) scales with both feature count and class count:</p>
+<p><img alt="Parameter matrix W is K×d" src="assets/week4/slide-37.png" /></p>
+<table>
+<thead>
+<tr>
+<th># Features</th>
+<th># Classes</th>
+<th># Parameters</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1K</td>
+<td>10</td>
+<td>10K</td>
+<td>Digit recognition</td>
+</tr>
+<tr>
+<td>1K</td>
+<td>1K</td>
+<td>1M</td>
+<td>ImageNet</td>
+</tr>
+<tr>
+<td>1K</td>
+<td>1M</td>
+<td>1G (heavy compute/memory cost)</td>
+<td>Face recognition</td>
+</tr>
+<tr>
+<td>1K</td>
+<td>1G</td>
+<td>???</td>
+<td>Face recognition for all Chinese citizens</td>
+</tr>
+</tbody>
+</table>
+<p>As the number of classes grows very large, the parameter count (and cost) explodes — a major limitation of the plain softmax classifier.</p>
+<p><img alt="Parameter explosion as #classes grows" src="assets/week4/slide-38.png" /></p>
+<hr />
+<h2 id="w4-11-self-check-quiz">11. Self-Check Quiz</h2>
+<p><strong>1. Which statement correctly describes the margin in a Support Vector Machine (SVM)?</strong>
+A. The average distance from all samples to the separating hyperplane.
+B. The minimum distance from any sample to the separating hyperplane. ✅
+C. The distance between the centres of the two classes.
+D. The length of the weight vector <strong>w</strong>.</p>
+<p><strong>2. In a soft-margin SVM, what does a slack variable ξⱼ &gt; 0 indicate?</strong>
+A. The sample fully satisfies the margin constraint and receives no penalty.
+B. The sample violates the margin constraint and is penalised in the objective function. ✅
+C. The sample must have been classified correctly.
+D. The sample will be removed from the training set.</p>
+<p><strong>3. Which property is satisfied by the class probabilities p₁, …, p_K produced by the Softmax function?</strong>
+A. Some probabilities may be negative.
+B. The probabilities sum to the number of classes K.
+C. All probabilities are non-negative and sum to 1. ✅
+D. The largest probability is always equal to 1.</p>
+<p><img alt="Quiz slide" src="assets/week4/slide-39.png" /></p>
+<hr />
+<h2 id="w4-12-references">12. References</h2>
+<ul>
+<li>Lawrence, J. (1994). <em>Introduction to Neural Networks</em>. California Scientific Software Press.</li>
+<li>Michalski, R. S., Carbonell, J. G., &amp; Mitchell, T. M. (Eds.). (2013). <em>Machine learning: An artificial intelligence approach</em>. Springer Science &amp; Business Media.</li>
+<li>Goodfellow, I., Bengio, Y., &amp; Courville, A. (2016). <em>Deep Learning</em>. MIT Press.</li>
+<li>Samuel, A. L. (1959). Some Studies in Machine Learning Using the Game of Checkers. <em>IBM Journal of Research and Development</em>, 3(3), 210–229. doi: 10.1147/rd.33.0210</li>
+<li><a href="https://github.com/wangshusen/DeepLearning">github.com/wangshusen/DeepLearning</a></li>
+<li><a href="https://cs229.stanford.edu">cs229.stanford.edu</a></li>
+</ul>
+<hr />
+<p><em>La Trobe University — CRICOS Provider Code Number 00115M</em></p>
+      </div>
+      <a class="back-top" href="#top">&uarr; Back to top</a>
+    </section>
+
+
+    <section class="week" id="week-5">
+      <div class="week-head">
+        <span class="week-tag">Week 5</span>
+        <h2>Unsupervised Learning</h2>
+      </div>
+      <div class="week-body">
+        <p><strong>Lecturer:</strong> Dr. Peng Cheng — La Trobe University, 2026</p>
+<hr />
+<h2 id="w5-table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#w5-1-k-nearest-neighbor-knn">K-Nearest Neighbor (KNN)</a></li>
+<li><a href="#w5-2-broad-machine-learning-tasks">Broad Machine Learning Tasks</a></li>
+<li><a href="#w5-3-clustering">Clustering</a></li>
+<li><a href="#w5-4-properties-of-clusters">Properties of Clusters</a></li>
+<li><a href="#w5-5-applications-of-clustering">Applications of Clustering</a></li>
+<li><a href="#w5-6-the-clustering-task--formal-definition">The Clustering Task — Formal Definition</a></li>
+<li><a href="#w5-7-evaluation-metrics-for-clustering">Evaluation Metrics for Clustering</a></li>
+<li><a href="#w5-8-k-means-clustering">K-Means Clustering</a></li>
+<li><a href="#w5-9-choosing-k">Choosing K</a></li>
+<li><a href="#w5-10-limitations-of-k-means">Limitations of K-Means</a></li>
+<li><a href="#w5-11-linear--ridge-regression-recap">Linear &amp; Ridge Regression (Recap)</a></li>
+<li><a href="#w5-12-the--norm-regularization-lasso">The ℓ₁-Norm Regularization (LASSO)</a></li>
+<li><a href="#w5-13-regularized-erm">Regularized ERM</a></li>
+<li><a href="#w5-14-broad-ml-tasks-revisited">Broad ML Tasks Revisited</a></li>
+<li><a href="#w5-15-self-check-quizzes">Self-Check Quizzes</a></li>
+<li><a href="#w5-16-references">References</a></li>
+</ol>
+<hr />
+<h2 id="w5-1-k-nearest-neighbor-knn">1. K-Nearest Neighbor (KNN)</h2>
+<p><strong>Input:</strong> feature vectors <code>x₁, ..., xₙ ∈ ℝᵈ</code> and labels <code>y₁, ..., yₙ ∈ ℕ</code>.</p>
+<p><strong>Question:</strong> How do we classify a new test feature vector <strong>x′</strong>?</p>
+<p><strong>k-Nearest Neighbor (KNN):</strong>
+- Find the <code>k</code> nearest neighbors (NN) of <strong>x′</strong>.
+- Let the <code>k</code> NNs <strong>vote</strong> on the label.</p>
+<p><img alt="KNN — finding the k nearest neighbors" src="assets/week5/slide-02.png" /></p>
+<h3 id="w5-how-to-set-k">How to Set k?</h3>
+<ul>
+<li>Treat <code>k</code> as a <strong>hyper-parameter</strong>.</li>
+<li><strong>Tune <code>k</code> using cross-validation.</strong></li>
+</ul>
+<p><img alt="Setting k as a hyperparameter" src="assets/week5/slide-03.png" /></p>
+<h3 id="w5-how-to-measure-similarity">How to Measure Similarity?</h3>
+<table>
+<thead>
+<tr>
+<th>Similarity Measure</th>
+<th>Formula</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cosine similarity</strong></td>
+<td><code>sim(x, x′) = xᵀx′ / (‖x‖₂‖x′‖₂)</code></td>
+</tr>
+<tr>
+<td><strong>Gaussian kernel</strong></td>
+<td><code>sim(x, x′) = exp(−(1/σ²)‖x−x′‖₂²)</code></td>
+</tr>
+<tr>
+<td><strong>Laplacian kernel</strong></td>
+<td><code>sim(x, x′) = exp(−(1/σ)‖x−x′‖₁)</code></td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Similarity measures for KNN" src="assets/week5/slide-04.png" /></p>
+<h3 id="w5-how-to-vote">How to Vote?</h3>
+<ul>
+<li><strong>Option 1:</strong> every neighbor has the same weight.</li>
+<li><strong>Option 2:</strong> nearer neighbors get higher weight, e.g. <code>weightᵢ = sim(xᵢ, x′)</code>.</li>
+</ul>
+<p><img alt="Voting schemes for KNN" src="assets/week5/slide-05.png" /></p>
+<h3 id="w5-choosing-k-changes-the-decision">Choosing k Changes the Decision</h3>
+<p>With <code>k=1</code>, the nearest single point decides the class — sensitive to noise. Larger <code>k</code> smooths the decision boundary by pooling more neighbors' votes.</p>
+<p><img alt="Effect of k on classification" src="assets/week5/slide-06.png" /></p>
+<h3 id="w5-knn-algorithm--complexity">KNN Algorithm &amp; Complexity</h3>
+<p><strong>Algorithm:</strong> find the <code>k</code> nearest neighbors to <strong>x′</strong>.</p>
+<ul>
+<li><strong>Naïve algorithm:</strong> compute all similarities <code>sim(x₁,x′), ..., sim(xₙ,x′)</code> and take the top <code>k</code>.</li>
+<li><strong>Training:</strong> no training at all (KNN is a "lazy learner").</li>
+<li><strong>Test:</strong> for each query, <code>O(nd)</code> time complexity.</li>
+</ul>
+<p><img alt="KNN algorithm and complexity" src="assets/week5/slide-07.png" /></p>
+<hr />
+<h2 id="w5-2-broad-machine-learning-tasks">2. Broad Machine Learning Tasks</h2>
+<p>Machine learning tasks broadly fall into: <strong>Classification</strong>, <strong>Regression</strong>, <strong>Clustering</strong>, and <strong>Dimensionality Reduction</strong>. Classification tasks include spam detection and face recognition.</p>
+<p><img alt="Broad ML tasks — classification highlighted" src="assets/week5/slide-08.png" /></p>
+<hr />
+<h2 id="w5-3-clustering">3. Clustering</h2>
+<p><strong>Clustering</strong> is <strong>unsupervised learning</strong>:
+- Requires data, but <strong>no labels</strong>.
+- Detects patterns, e.g. in:
+  - Grouping emails or search results
+  - Customer shopping patterns
+  - Regions of images
+- Useful when you don't know what you're looking for.
+- <strong>But:</strong> results can be gibberish if patterns aren't meaningful.</p>
+<p><img alt="Clustering — high/average/low income groups example" src="assets/week5/slide-09.png" /></p>
+<hr />
+<h2 id="w5-4-properties-of-clusters">4. Properties of Clusters</h2>
+<p>A good clustering has two key properties:
+1. <strong>All the data points in a cluster should be similar to each other.</strong>
+2. <strong>The data points from different clusters should be as different as possible.</strong></p>
+<p>Case I below groups points <em>close on the x-axis</em> even though their spread makes members dissimilar in one direction; Case II shows a clustering respecting both properties.</p>
+<p><img alt="Properties of clusters — good vs. less-good groupings" src="assets/week5/slide-10.png" /></p>
+<p><img alt="Case I vs Case II clustering comparison" src="assets/week5/slide-11.png" /></p>
+<hr />
+<h2 id="w5-5-applications-of-clustering">5. Applications of Clustering</h2>
+<p><strong>Document clustering</strong> — group similar documents together.</p>
+<p><img alt="Document clustering icon" src="assets/week5/slide-12.png" /></p>
+<p><strong>Image segmentation</strong> — break an image into meaningful or perceptually similar regions.</p>
+<p><img alt="Image segmentation examples — bears and landscape" src="assets/week5/slide-13.png" /></p>
+<p><img alt="Image segmentation — landscape region boundaries" src="assets/week5/slide-14.png" /></p>
+<p><strong>Recommendation engines</strong> — e.g. Spotify's "Daily Mix" playlists group similar tracks/artists together.</p>
+<p><img alt="Recommendation engine example — Spotify Daily Mix" src="assets/week5/slide-15.png" /></p>
+<p><strong>Clustering gene expression data</strong> — group genes with similar expression patterns over time (heatmap + dendrogram).</p>
+<p><img alt="Gene expression clustering heatmap" src="assets/week5/slide-16.png" /></p>
+<hr />
+<h2 id="w5-6-the-clustering-task--formal-definition">6. The Clustering Task — Formal Definition</h2>
+<p><strong>Input:</strong> vectors <code>x₁, ..., xₙ ∈ ℝᵈ</code> and cluster number <code>k</code> (<code>k ≪ n</code>).
+<strong>Output:</strong> predicted class labels <code>y₁, ..., yₙ ∈ {1, 2, ..., k}</code>.</p>
+<p><img alt="Clustering task input/output, k=3 example" src="assets/week5/slide-17.png" /></p>
+<h3 id="w5-equivalent-definition">Equivalent Definition</h3>
+<p><strong>Clustering:</strong> partition <code>[n]</code> into <code>k</code> disjoint subsets <code>S₁, ..., S_k</code>:
+- <code>S₁ ∪ ... ∪ S_k = [n]</code>
+- <code>Sᵢ ∩ Sⱼ = ∅</code> for all <code>i ≠ j</code></p>
+<p><img alt="Equivalent partition definition of clustering" src="assets/week5/slide-18.png" /></p>
+<p><strong>Example:</strong> <code>n = 12</code>, <code>k = 2</code> → partition indices <code>{1,3,4,7,11}</code> and <code>{2,5,6,8,9,10,12}</code> into <code>S₁</code> and <code>S₂</code>.</p>
+<p><img alt="Partition example with n=12, k=2" src="assets/week5/slide-19.png" /></p>
+<hr />
+<h2 id="w5-7-evaluation-metrics-for-clustering">7. Evaluation Metrics for Clustering</h2>
+<ul>
+<li><strong>Intra-cluster distance</strong> — how far points are from each other (or the centroid) <em>within</em> the same cluster.</li>
+<li><strong>Inter-cluster distance</strong> — how far apart <em>different</em> clusters' centroids are.</li>
+</ul>
+<p><strong>Dunn Index:</strong></p>
+<pre><code>Dunn Index = min(Inter-cluster distance) / max(Intra-cluster distance)
+</code></pre>
+<p>A <strong>higher</strong> Dunn Index indicates better clustering (tight, well-separated clusters).</p>
+<p><img alt="Dunn Index — intra vs inter cluster distance" src="assets/week5/slide-20.png" /></p>
+<hr />
+<h2 id="w5-8-k-means-clustering">8. K-Means Clustering</h2>
+<p><strong>Step 1:</strong> Choose the number of clusters <code>k</code>.
+<strong>Step 2:</strong> Select <code>k</code> random points from the data as centroids (e.g. C1, C2).</p>
+<p><img alt="K-Means steps 1–2: choose k, select initial centroids" src="assets/week5/slide-21.png" /></p>
+<p><strong>Step 3:</strong> Assign all points to the closest cluster centroid.</p>
+<p><img alt="K-Means step 3: assign points to nearest centroid" src="assets/week5/slide-22.png" /></p>
+<p><strong>Step 4:</strong> Recompute the centroids of the newly formed clusters.
+<strong>Step 5:</strong> Repeat steps 3 and 4 until convergence.</p>
+<p><img alt="K-Means steps 4–5: recompute centroids and iterate" src="assets/week5/slide-23.png" /></p>
+<h3 id="w5-stopping-criteria">Stopping Criteria</h3>
+<ul>
+<li>Centroids of newly formed clusters <strong>do not change</strong>.</li>
+<li>Points <strong>remain in the same cluster</strong> between iterations.</li>
+<li><strong>Maximum number of iterations</strong> is reached.</li>
+</ul>
+<p><img alt="K-Means stopping criteria" src="assets/week5/slide-24.png" /></p>
+<h3 id="w5-family-of-clustering-algorithms">Family of Clustering Algorithms</h3>
+<ul>
+<li><strong>Partition algorithms (Flat):</strong></li>
+<li>K-means</li>
+<li>Mixture of Gaussian</li>
+<li>Spectral Clustering</li>
+<li><strong>Hierarchical algorithms:</strong></li>
+<li>Bottom-up (agglomerative)</li>
+<li>Top-down (divisive)</li>
+</ul>
+<p><img alt="Partition vs. hierarchical clustering algorithms" src="assets/week5/slide-25.png" /></p>
+<h3 id="w5-interactive-k-means-demo">Interactive K-Means Demo</h3>
+<p>Once converged, K-means partitions the space into regions (a Voronoi-like diagram) around each centroid.</p>
+<p><img alt="K-Means algorithm decision regions" src="assets/week5/slide-26.png" /></p>
+<hr />
+<h2 id="w5-9-choosing-k">9. Choosing K</h2>
+<p>Two common diagnostic tools:</p>
+<ul>
+<li><strong>Elbow Method:</strong> plot within-cluster sum of squares (WCSS) vs. <code>K</code>; pick the "elbow" where improvement starts to flatten.</li>
+<li><strong>Silhouette Score:</strong> plot the average silhouette score vs. <code>K</code>; higher is better.</li>
+</ul>
+<blockquote>
+<p><strong>Rule of thumb:</strong> choose the elbow where improvement flattens, then confirm the silhouette score is high. In the illustrative example below, both methods support <strong>K = 3</strong>.</p>
+</blockquote>
+<p><img alt="Elbow method and silhouette score for choosing K" src="assets/week5/slide-27.png" /></p>
+<hr />
+<h2 id="w5-10-limitations-of-k-means">10. Limitations of K-Means</h2>
+<h3 id="w5-non-convex-clusters">Non-Convex Clusters</h3>
+<p><strong>What happens:</strong> K-means creates convex regions around its centroids.
+<strong>Why it fails:</strong> a curved (non-convex) cluster can be split by the straight decision boundary.
+<strong>Better choice:</strong> use <strong>spectral clustering</strong> or <strong>DBSCAN</strong>.</p>
+<p><img alt="Non-convex clusters break K-means' straight boundary" src="assets/week5/slide-28.png" /></p>
+<h3 id="w5-outliers-shift-centroids">Outliers Shift Centroids</h3>
+<p><strong>What happens:</strong> K-means represents each cluster by its mean.
+<strong>Why it fails:</strong> a distant outlier point pulls the centroid and may change other points' assignments.
+<strong>Better practice:</strong> scale features, inspect outliers, and consider a more robust method.</p>
+<p><img alt="Outliers shifting K-means centroids" src="assets/week5/slide-29.png" /></p>
+<hr />
+<h2 id="w5-11-linear--ridge-regression-recap">11. Linear &amp; Ridge Regression (Recap)</h2>
+<p><strong>Task — Input:</strong> feature matrix <code>X ∈ ℝⁿˣᵈ</code> and labels <code>y ∈ ℝⁿ</code>.
+<strong>Output:</strong> vector <code>w ∈ ℝᵈ</code> such that <code>Xw ≈ y</code>.</p>
+<p><strong>Methods:</strong>
+- <strong>Least squares regression:</strong> <code>min_w (1/n)‖Xw − y‖₂²</code>
+- <strong>Ridge regression:</strong> <code>min_w (1/n)‖Xw − y‖₂² + γ‖w‖₂²</code> (Loss Function + Regularization)</p>
+<p><img alt="Linear regression: least squares and ridge regression" src="assets/week5/slide-30.png" /></p>
+<h3 id="w5-ridge-regression--analytical-solution">Ridge Regression — Analytical Solution</h3>
+<pre><code>w* = (XᵀX + nγI_d)⁻¹ Xᵀy
+</code></pre>
+<p><strong>Derivation:</strong>
+- Objective: <code>Q(w) = (1/n)‖Xw−y‖₂² + γ‖w‖₂²</code>
+- Gradient: <code>∇Q(w) = (2/n)Xᵀ(Xw−y) + 2γw</code>
+- Setting <code>∇Q(w*) = 0</code> gives <code>(2/n)(XᵀX + nγI_d)w* = (2/n)Xᵀy</code></p>
+<p><strong>Time complexity:</strong>
+- <code>O(nd²)</code> for computing <code>XᵀX</code>
+- <code>O(d³)</code> for inverting the <code>d×d</code> matrix <code>XᵀX + nγI_d</code>
+- Total: <code>O(nd² + d³)</code></p>
+<p><img alt="Ridge regression analytical solution and derivation" src="assets/week5/slide-31.png" /></p>
+<h3 id="w5-usefulness-of-regularization">Usefulness of Regularization</h3>
+<p><strong>Question:</strong> Why do we use ℓ₂-norm regularization?</p>
+<ul>
+<li><strong>Reason 1:</strong> easier to optimize.</li>
+<li><strong>Reason 2:</strong> better generalization.</li>
+<li>Least squares has better <em>training</em> error (due to optimality on the training set).</li>
+<li>Ridge regression makes better <em>test-set</em> predictions (due to the <strong>bias-variance decomposition</strong>) — it trades a little training error for lower variance.</li>
+</ul>
+<p><img alt="Regularization improves test MSE vs. training MSE" src="assets/week5/slide-32.png" /></p>
+<hr />
+<h2 id="w5-12-the--norm-regularization-lasso">12. The ℓ₁-Norm Regularization (LASSO)</h2>
+<p><strong>Setup:</strong> <code>x ∈ ℝᵈ → prediction → y ∈ ℝ</code></p>
+<ul>
+<li><strong>Fact 1:</strong> <code>y</code> can be independent of some of the <code>d</code> features.</li>
+<li><strong>Fact 2:</strong> if <code>d ≫ n</code>, linear models are likely to overfit.</li>
+</ul>
+<p><strong>Example:</strong> predicting disease from genomic data — <code>d</code> is huge (~20K protein-coding genes), <code>n</code> is small (tens/hundreds of participants), and most genes are irrelevant to a specific disease.</p>
+<p><img alt="L1 regularization motivation — genomic data example" src="assets/week5/slide-33.png" /></p>
+<p><strong>Goals:</strong>
+- <strong>Goal 1:</strong> select the features relevant to <code>y</code>.
+- <strong>Goal 2:</strong> prevent overfitting for large-<code>d</code>, small-<code>n</code> problems.</p>
+<p><img alt="L1 regularization goals — feature selection and overfitting prevention" src="assets/week5/slide-34.png" /></p>
+<h3 id="w5-lasso-formulation">LASSO Formulation</h3>
+<pre><code>LASSO:  min_w  (1/2n)‖Xw − y‖₂²     s.t.  ‖w‖₁ ≤ t
+</code></pre>
+<p>The feasible set <code>{w : ‖w‖₁ ≤ t}</code> is <strong>convex</strong> (a diamond shape in 2D — the ℓ₁-ball).</p>
+<p><img alt="LASSO constrained formulation — the L1 ball" src="assets/week5/slide-35.png" /></p>
+<p><strong>Key properties:</strong>
+- It is a convex optimization model.
+- The optimal solution <code>w*</code> is <strong>sparse</strong> (most entries are zero).
+- Smaller <code>t</code> → sparser <code>w*</code>.
+- <strong>Sparsity ⟺ feature selection</strong>, because if <code>x′</code> is a test vector and prediction is <code>x′ᵀw* = w₁*x₁′ + w₂*x₂′ + ... + w_d*x_d′</code>, then a zero coefficient <code>w₁* = 0</code> means the prediction is independent of feature <code>x₁′</code>.</p>
+<p><img alt="LASSO sparsity and feature selection reasoning" src="assets/week5/slide-36.png" /></p>
+<p><strong>Alternative (penalized) form:</strong></p>
+<pre><code>min_w  (1/2n)‖Xw − y‖₂² + γ‖w‖₁
+</code></pre>
+<p>(Loss Function + Regularization — same idea as ridge, but with the ℓ₁ norm instead of ℓ₂.)</p>
+<p><img alt="LASSO as penalized loss + regularization" src="assets/week5/slide-37.png" /></p>
+<hr />
+<h2 id="w5-13-regularized-erm">13. Regularized ERM</h2>
+<p><strong>Regularized empirical risk minimization:</strong></p>
+<pre><code>min_{w ∈ ℝᵈ}  (1/n) Σᵢ L(w; xᵢ, yᵢ)  +  R(w)
+</code></pre>
+<p><strong>Loss function <code>L</code></strong> examples:
+- Linear regression: <code>L(w; xᵢ,yᵢ) = ½(wᵀxᵢ − yᵢ)²</code>
+- Logistic regression: <code>L(w; xᵢ,yᵢ) = log(1 + exp(−yᵢwᵀxᵢ))</code>
+- SVM: <code>L(w; xᵢ,yᵢ) = max{0, 1 − yᵢwᵀxᵢ}</code></p>
+<p><img alt="Regularized ERM — general form with loss function examples" src="assets/week5/slide-38.png" /></p>
+<p><strong>Regularization <code>R(w)</code></strong> options:
+- ℓ₁-norm: <code>R(w) = γ‖w‖₁</code>
+- ℓ₂-norm: <code>R(w) = γ‖w‖₂²</code>
+- Elastic net: <code>R(w) = γ₁‖w‖₁ + γ₂‖w‖₂²</code></p>
+<p><img alt="Regularized ERM — regularization term options" src="assets/week5/slide-39.png" /></p>
+<p>📺 Further viewing: <a href="https://www.youtube.com/watch?v=U_CLHExy_Xk">Regularization explained</a></p>
+<p><img alt="Regularization intuition sketch — X→W→Y and overfitting" src="assets/week5/slide-40.png" /></p>
+<hr />
+<h2 id="w5-14-broad-ml-tasks-revisited">14. Broad ML Tasks Revisited</h2>
+<p>Zooming back out: <strong>Classification</strong> and <strong>Regression</strong> are <strong>Supervised Learning</strong>; <strong>Clustering</strong> and <strong>Dimensionality Reduction</strong> are <strong>Unsupervised Learning</strong>.</p>
+<p><img alt="Broad ML tasks — supervised vs unsupervised learning" src="assets/week5/slide-41.png" /></p>
+<p><img alt="Supervised vs unsupervised learning illustration" src="assets/week5/slide-42.png" /></p>
+<hr />
+<h2 id="w5-15-self-check-quizzes">15. Self-Check Quizzes</h2>
+<h3 id="w5-quiz-set-a--unsupervised-learning-concepts">Quiz Set A — Unsupervised Learning Concepts</h3>
+<p><strong>Q1.</strong> Which of the following best describes unsupervised learning?
+A. Learning from labelled data to predict outcomes
+B. Learning without labelled outputs to find patterns or structure in data ✅
+C. Learning through reinforcement signals
+D. Learning using deep neural networks only</p>
+<p><strong>Q6.</strong> In K-means clustering, the objective function minimizes:
+A. Within-cluster variance ✅
+B. Between-cluster variance
+C. Log-likelihood of data
+D. Mean absolute error</p>
+<p><strong>Q11.</strong> Principal Component Analysis (PCA) works by:
+A. Maximizing within-class variance
+B. Minimizing Euclidean distance between points
+C. Projecting data onto directions of maximum variance ✅
+D. Building decision trees</p>
+<p><strong>Q14.</strong> Which of the following statements about Autoencoders is <strong>incorrect</strong>?
+A. Autoencoders are neural networks used for dimensionality reduction
+B. They learn to reconstruct the input data
+C. They require labelled data for training ✅ <em>(incorrect statement — autoencoders are unsupervised)</em>
+D. They can be used for anomaly detection</p>
+<p><img alt="Quiz Set A — unsupervised learning, K-means, PCA, autoencoders" src="assets/week5/slide-43.png" /></p>
+<h3 id="w5-quiz-set-b--regularization">Quiz Set B — Regularization</h3>
+<p><strong>Q1.</strong> What is the main purpose of regularisation in machine learning?
+A. To reduce training time
+B. To increase model complexity
+C. To prevent overfitting by penalising large weights ✅
+D. To improve data normalisation</p>
+<p><strong>Q6.</strong> Which statement is <strong>true</strong> about L1 regularisation?
+A. It tends to produce sparse weight vectors ✅
+B. It penalises the sum of squared weights
+C. It is less robust to outliers
+D. It cannot be used with linear regression</p>
+<p><strong>Q7.</strong> Which loss function represents <strong>L2 regularisation</strong> in linear regression?
+A. <code>Σ(y−ŷ)² + λΣ|w|</code>
+B. <code>Σ(y−ŷ)² + λΣw²</code> ✅
+C. <code>Σ|y−ŷ| + λΣ|w|</code>
+D. <code>Σ|y−ŷ| + λΣw²</code></p>
+<p><img alt="Quiz Set B — regularization, L1 vs L2" src="assets/week5/slide-44.png" /></p>
+<hr />
+<h2 id="w5-16-references">16. References</h2>
+<ul>
+<li>Lawrence, J. (1994). <em>Introduction to Neural Networks</em>. California Scientific Software Press.</li>
+<li>Michalski, R. S., Carbonell, J. G., &amp; Mitchell, T. M. (Eds.). (2013). <em>Machine learning: An artificial intelligence approach</em>. Springer Science &amp; Business Media.</li>
+<li>Goodfellow, I., Bengio, Y., &amp; Courville, A. (2016). <em>Deep Learning</em>. MIT Press.</li>
+<li>Samuel, A. L. (1959). Some Studies in Machine Learning Using the Game of Checkers. <em>IBM Journal of Research and Development</em>, 3(3), 210–229. doi: 10.1147/rd.33.0210</li>
+<li><a href="https://github.com/wangshusen/DeepLearning">github.com/wangshusen/DeepLearning</a></li>
+<li><a href="https://cs229.stanford.edu">cs229.stanford.edu</a></li>
+</ul>
+<hr />
+<p><em>La Trobe University — CRICOS Provider Code Number 00115M</em></p>
+      </div>
+      <a class="back-top" href="#top">&uarr; Back to top</a>
+    </section>
+
+
+    <section class="week" id="week-6">
+      <div class="week-head">
+        <span class="week-tag">Week 6</span>
+        <h2>Neural Networks Basics</h2>
+      </div>
+      <div class="week-body">
+        <p><strong>Dr. Peng Cheng | La Trobe University, 2026</strong></p>
+<p>Study notes from the lecture slides, with all diagrams included. Notes are written as simplified, beginner-friendly explanations alongside each slide image.</p>
+<p><img alt="Title slide" src="assets/week6/slide-01.jpg" /></p>
+<h2 id="w6-table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#w6-part-1-from-multi-class-classification-to-the-softmax-classifier">From Multi-Class Classification to the Softmax Classifier</a></li>
+<li><a href="#w6-part-2-background-why-neural-networks-took-off">Background: Why Neural Networks Took Off</a></li>
+<li><a href="#w6-part-3-neural-network-basics">Neural Network Basics</a></li>
+<li><a href="#w6-part-4-from-softmax-classifier-to-a-full-neural-network">From Softmax Classifier to a Full Neural Network</a></li>
+<li><a href="#w6-part-5-backpropagation">Backpropagation</a></li>
+<li><a href="#w6-part-6-mini-batch-training">Mini-Batch Training</a></li>
+<li><a href="#w6-part-7-summary-of-a-fully-connected-neural-network">Summary of a Fully Connected Neural Network</a></li>
+<li><a href="#w6-part-8-quiz">Quiz</a></li>
+<li><a href="#w6-part-9-references">References</a></li>
+</ol>
+<hr />
+<h2 id="w6-part-1-from-multi-class-classification-to-the-softmax-classifier">Part 1: From Multi-Class Classification to the Softmax Classifier</h2>
+<h3 id="w6-multi-class-classification">Multi-class classification</h3>
+<p><img alt="Multi-class classification" src="assets/week6/slide-02.jpg" /></p>
+<p>When there are more than 2 classes (e.g. classifying handwritten digits 0–9, so <strong>10 classes</strong>), we need a model that outputs a probability for <em>each</em> class, not just one number like in binary classification.</p>
+<h3 id="w6-one-hot-encoding">One-hot encoding</h3>
+<p><img alt="One-hot encoding" src="assets/week6/slide-03.jpg" /></p>
+<p>Turns a class label into a vector of 0s with a single 1 in the position of the correct class. E.g. for 10 classes, label <code>y = 3</code> becomes:</p>
+<pre><code>y = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0]
+</code></pre>
+<h3 id="w6-softmax-function">Softmax function</h3>
+<p><img alt="Softmax function" src="assets/week6/slide-04.jpg" /></p>
+<p>Takes a vector of raw scores (<strong>logits</strong>) and squashes them into a probability distribution — all values between 0 and 1, and they sum to 1:</p>
+<pre><code>p_k = exp(φ_k) / Σ exp(φ_j)
+</code></pre>
+<p>Bigger input scores → bigger (but proportionally squashed) output probabilities.</p>
+<h3 id="w6-cross-entropy">Cross-entropy</h3>
+<p><img alt="Cross-entropy" src="assets/week6/slide-05.jpg" /></p>
+<p>Measures how different the predicted distribution <strong>p</strong> is from the true one-hot label <strong>y</strong>:</p>
+<pre><code>H(y, p) = -Σ y_l · log(p_l)
+</code></pre>
+<p>Since y is one-hot, this basically boils down to: <em>"how confident was the model in the correct class?"</em> — low confidence in the right answer = high loss.</p>
+<h3 id="w6-softmax-classifier-model-formulation">Softmax Classifier: model formulation</h3>
+<p><img alt="Softmax classifier setup" src="assets/week6/slide-06.jpg" /></p>
+<p>Setup: n samples, d features, K classes. Feature vectors <strong>x</strong> ∈ ℝᵈ, labels turned into one-hot vectors <strong>y</strong> ∈ ℝᴷ.</p>
+<h3 id="w6-softmax-classifier---wx">Softmax Classifier: φ = Wx</h3>
+<p><img alt="Softmax classifier Wx" src="assets/week6/slide-07.jpg" /></p>
+<p>The model is just a matrix multiply: <strong>φ = Wx</strong>, where <strong>W</strong> (K×d) is the learnable weight matrix. This produces a K-dimensional score vector.</p>
+<h3 id="w6-softmax-classifier-score-example">Softmax Classifier: score example</h3>
+<p><img alt="Digit example scores" src="assets/week6/slide-08.jpg" /></p>
+<p>Example: for a handwritten digit, φ might have its highest value at the position for "3" — meaning the model thinks it's most likely a 3 (second-highest score is "8", which makes sense since they look similar).</p>
+<h3 id="w6-softmax-classifier-turning-scores-into-probabilities">Softmax Classifier: turning scores into probabilities</h3>
+<p><img alt="Softmax turns scores into a distribution" src="assets/week6/slide-09.jpg" /></p>
+<p>Apply softmax to φ to get <strong>p</strong>, a proper probability distribution over the 10 classes (all entries sum to 1).</p>
+<h3 id="w6-softmax-classifier-the-loss">Softmax Classifier: the loss</h3>
+<p><img alt="Cross-entropy as the loss" src="assets/week6/slide-10.jpg" /></p>
+<p>Put it together: <code>φ = Wx</code> → <code>p = Softmax(φ)</code> → <code>H(y, p)</code> = the loss we want to minimize.</p>
+<h3 id="w6-softmax-classifier-full-pipeline">Softmax Classifier: full pipeline</h3>
+<p><img alt="Full softmax classifier pipeline" src="assets/week6/slide-11.jpg" /></p>
+<p>The whole flow in one diagram: <strong>x → Wx → φ → softmax → p</strong>, then compare <strong>p</strong> against the true label <strong>y</strong> using cross-entropy to get the loss.</p>
+<h3 id="w6-limitations-of-the-softmax-classifier">Limitations of the Softmax Classifier</h3>
+<p><img alt="Limitations of softmax classifier" src="assets/week6/slide-12.jpg" /></p>
+<p>The problem: <strong>W</strong> has size (#classes × #features), so the parameter count explodes as either grows.</p>
+<ul>
+<li>1K features, 10 classes → 10K parameters (fine)</li>
+<li>1K features, 1K classes (e.g. ImageNet) → 1M parameters</li>
+<li>1K features, 1M classes (e.g. face recognition) → 1G parameters — very heavy</li>
+<li>What about 1B classes (e.g. recognizing every citizen of a country)? Not feasible with a single linear layer.</li>
+</ul>
+<p>This motivates going deeper — i.e., <strong>neural networks</strong>.</p>
+<hr />
+<h2 id="w6-part-2-background-why-neural-networks-took-off">Part 2: Background: Why Neural Networks Took Off</h2>
+<p><img alt="AI resurgence — Google, Microsoft, Facebook" src="assets/week6/slide-13.jpg" /></p>
+<p>Big tech (Google, Microsoft, Facebook) started building dedicated AI research teams and making major acquisitions as AI research resurged.</p>
+<p><img alt="Google DeepMind and AlphaGo" src="assets/week6/slide-14.jpg" /></p>
+<p>Google DeepMind's AlphaGo became the first program to beat a professional Go player — a landmark moment for deep learning + reinforcement learning.</p>
+<p><img alt="Facebook AI Research (FAIR)" src="assets/week6/slide-15.jpg" /></p>
+<p>Facebook launched FAIR (Facebook AI Research) and used facial recognition tech in products like Moments.</p>
+<h3 id="w6-a-brief-history-of-mlai">A brief history of ML/AI</h3>
+<p><img alt="History timeline of ML/AI" src="assets/week6/slide-16.jpg" /></p>
+<p>A timeline from the 1700s (Bayes theorem) through perceptrons, the "AI Winter" (when Minsky &amp; Papert showed perceptrons can't learn XOR), the rise of SVMs and backprop, deep learning's resurgence (Hinton, Bengio, LeCun), up to GPT-3/4 and speculation about "another AI winter."</p>
+<hr />
+<h2 id="w6-part-3-neural-network-basics">Part 3: Neural Network Basics</h2>
+<p><img alt="What is a neural network? (video)" src="assets/week6/slide-17.jpg" /></p>
+<p><em>(Video reference — what is a neural network, high level intro.)</em></p>
+<h3 id="w6-definition">Definition</h3>
+<p><img alt="Neural network definition" src="assets/week6/slide-18.jpg" /></p>
+<p>A neural network is a reasoning model inspired by the brain: lots of simple, densely interconnected processing units (<strong>neurons</strong>) working together.</p>
+<h3 id="w6-biological-motivation">Biological motivation</h3>
+<p><img alt="Biological neuron vs mathematical model" src="assets/week6/slide-19.jpg" /></p>
+<p>A biological neuron takes signals in through dendrites and fires an output through its axon. The math version: each input <code>x_i</code> gets multiplied by a weight <code>w_i</code>, everything gets summed (plus a bias <code>b</code>), and passed through an <strong>activation function</strong> <code>f</code> to produce the output.</p>
+<pre><code>output = f( Σ w_i·x_i + b )
+</code></pre>
+<h3 id="w6-activation-functions">Activation functions</h3>
+<p><img alt="Sigmoid, tanh, ReLU" src="assets/week6/slide-20.jpg" /></p>
+<p>Three common choices:
+- <strong>Sigmoid</strong>: squashes to (0, 1) — <code>1 / (1 + e^-x)</code>
+- <strong>tanh</strong>: squashes to (-1, 1)
+- <strong>ReLU</strong>: <code>max(0, x)</code> — just zeroes out negatives, keeps positives as-is. Simple and very popular.</p>
+<h3 id="w6-layers-of-a-neural-network">Layers of a neural network</h3>
+<p><img alt="Input, hidden, output layers" src="assets/week6/slide-21.jpg" /></p>
+<p>A network is built from layers:
+- <strong>Input layer</strong> — raw features <code>x_1 ... x_n</code>
+- <strong>Hidden layer(s)</strong> — intermediate computations, can stack multiple
+- <strong>Output layer</strong> — final predictions <code>y_1 ... y_l</code></p>
+<p>Each connection between layers has a weight (<code>w_ij</code>, <code>w_jk</code>, etc.).</p>
+<h3 id="w6-multi-layer-perceptron-mlp">Multi-layer Perceptron (MLP)</h3>
+<p><img alt="MLP structure" src="assets/week6/slide-22.jpg" /></p>
+<p>An MLP = input layer + one or more hidden layers + output layer. Hidden units act like <strong>new, learned features</strong>. You can think of the output as a combination of predictions from simpler "sub-models" in the hidden layer.</p>
+<pre><code>h_nk = g( Σ w_dk · x_nd )     (hidden layer)
+y_n  = o( Σ v_k · h_nk )      (output layer)
+</code></pre>
+<h3 id="w6-common-activation-function-choices-more-detail">Common activation function choices (more detail)</h3>
+<p><img alt="Sigmoid, tanh, ReLU, Leaky ReLU comparison" src="assets/week6/slide-23.jpg" /></p>
+<ul>
+<li><strong>Sigmoid / tanh</strong>: gradients "saturate" (go close to zero) at extreme values — this slows down learning. tanh is preferred over sigmoid because it keeps the next layer's inputs centered near zero.</li>
+<li><strong>ReLU</strong>: fixes the saturation problem for positive inputs, but can cause "dead neurons" (always outputs 0) if inputs go negative.</li>
+<li><strong>Leaky ReLU</strong>: <code>max(βa, a)</code> where β is small and positive — fixes the dead neuron problem by letting a small negative slope through.</li>
+</ul>
+<h3 id="w6-single-hidden-layer-single-output">Single hidden layer, single output</h3>
+<p><img alt="Single hidden layer single output" src="assets/week6/slide-24.jpg" /></p>
+<p>For scalar-valued regression or binary classification: one hidden layer with K nodes, one output node.</p>
+<pre><code>h_n = g(Wᵀx_n)      y_n = o(vᵀh_n)
+</code></pre>
+<h3 id="w6-single-hidden-layer-multiple-outputs">Single hidden layer, multiple outputs</h3>
+<p><img alt="Single hidden layer multiple outputs" src="assets/week6/slide-25.jpg" /></p>
+<p>For multi-class or multi-label problems: same idea, but the output layer produces a vector (C outputs) instead of a scalar.</p>
+<pre><code>h_n = g(Wᵀx_n)      y_n = o(Vᵀh_n)
+</code></pre>
+<h3 id="w6-representing-a-neural-network-nodeedge-view">Representing a neural network (node/edge view)</h3>
+<p><img alt="Representing a NN as nodes and edges" src="assets/week6/slide-26.jpg" /></p>
+<ul>
+<li>A <strong>node</strong> = one entry of a vector <code>x</code>.</li>
+<li>A <strong>dense (fully connected) layer</strong> = parameterized by a matrix <code>W</code>.</li>
+<li>An <strong>edge</strong> = one entry of the weight matrix <code>W</code>.</li>
+</ul>
+<h3 id="w6-representing-a-neural-network-blocklayer-view">Representing a neural network (block/layer view)</h3>
+<p><img alt="Equivalent block diagram of a NN" src="assets/week6/slide-27.jpg" /></p>
+<p>Same network, drawn as blocks instead of individual neurons — much cleaner for deeper networks: <code>x⁽⁰⁾ → [Dense Layer] → x⁽¹⁾ → [Dense Layer] → x⁽²⁾</code>.</p>
+<hr />
+<h2 id="w6-part-4-from-softmax-classifier-to-a-full-neural-network">Part 4: From Softmax Classifier to a Full Neural Network</h2>
+<h3 id="w6-recap-training-a-softmax-classifier">Recap: training a softmax classifier</h3>
+<p><img alt="Train a softmax classifier recap" src="assets/week6/slide-28.jpg" /></p>
+<p>For digit recognition: input <code>x ∈ ℝ⁷⁸⁵</code>, compute <code>z = Wx ∈ ℝ¹⁰</code>, output <code>f(x) = Softmax(z)</code>. Train by minimizing average cross-entropy over the training set (this is called <strong>empirical risk minimization</strong>, ERM).</p>
+<h3 id="w6-from-linear-model-to-neural-network">From linear model to neural network</h3>
+<p><img alt="From linear model to neural network" src="assets/week6/slide-29.jpg" /></p>
+<p>Just stack more layers on top of the softmax classifier! Each hidden layer does: linear transform (<code>Wx</code>) → ReLU. The final layer does linear transform → Softmax.</p>
+<pre><code>Hidden Layer 1: z⁽¹⁾ = W⁽⁰⁾x⁽⁰⁾,  x⁽¹⁾ = max{0, z⁽¹⁾}
+Hidden Layer 2: z⁽²⁾ = W⁽¹⁾x⁽¹⁾,  x⁽²⁾ = max{0, z⁽²⁾}
+Output Layer:   z⁽³⁾ = W⁽²⁾x⁽²⁾,  x⁽³⁾ = Softmax(z⁽³⁾)
+</code></pre>
+<h3 id="w6-choosing-activation-functions-per-task">Choosing activation functions per task</h3>
+<p><img alt="Choosing activation functions" src="assets/week6/slide-30.jpg" /></p>
+<p>Quick rules of thumb:
+- <strong>Binary classification</strong> → sigmoid or tanh
+- <strong>Regression, labels can be any real number</strong> → no activation on the output
+- <strong>Regression, labels must be positive</strong> → ReLU on the output
+- <strong>Multi-class classification</strong> → Softmax on the output</p>
+<hr />
+<h2 id="w6-part-5-backpropagation">Part 5: Backpropagation</h2>
+<h3 id="w6-setting-up-the-optimization-problem">Setting up the optimization problem</h3>
+<p><img alt="Gradient and backpropagation setup" src="assets/week6/slide-31.jpg" /></p>
+<p>We want to minimize the average loss over all training samples by adjusting <code>W⁽⁰⁾, W⁽¹⁾, W⁽²⁾</code>. Use <strong>Stochastic Gradient Descent (SGD)</strong>:</p>
+<ol>
+<li>Randomly pick a sample <code>j</code></li>
+<li>Compute the gradient of the loss w.r.t. each weight matrix</li>
+<li>Update: <code>W_new = W_old - α · gradient</code></li>
+</ol>
+<p>The hard part: how do you actually <em>compute</em> those gradients efficiently? → <strong>Backpropagation</strong>.</p>
+<h3 id="w6-backpropagation-step-12">Backpropagation, step 1–2</h3>
+<p><img alt="Backprop take-home message, forward pass" src="assets/week6/slide-32.jpg" /></p>
+<ol>
+<li>Randomly pick a sample <code>(x_j, y_j)</code></li>
+<li>Run a <strong>forward pass</strong>: feed <code>x_j</code> through the network to get the prediction <code>f(x_j)</code>, then compare it to <code>y_j</code> to get the loss.</li>
+</ol>
+<h3 id="w6-backpropagation-step-3">Backpropagation, step 3</h3>
+<p><img alt="Backprop take-home message, backward pass" src="assets/week6/slide-33.jpg" /></p>
+<ol start="3">
+<li>Run a <strong>backward pass</strong>: starting from the loss, work backwards through the network to get the gradient with respect to every weight matrix, all the way back to <code>W⁽⁰⁾</code>.</li>
+</ol>
+<h3 id="w6-1d-worked-example--setup">1D worked example — setup</h3>
+<p><img alt="Backprop 1D example setup" src="assets/week6/slide-34.jpg" /></p>
+<p>To build intuition, here's the simplest possible case: a network where every layer is just a single scalar, <code>f: ℝ → ℝ</code>.</p>
+<pre><code>z⁽¹⁾ = w⁽⁰⁾x⁽⁰⁾,  x⁽¹⁾ = max{0, z⁽¹⁾}
+z⁽²⁾ = w⁽¹⁾x⁽¹⁾,  x⁽²⁾ = max{0, z⁽²⁾}
+z⁽³⁾ = w⁽²⁾x⁽²⁾   (output)
+</code></pre>
+<p>Forward pass = plug in <code>x_j</code> and compute each of these values in order, top to bottom.</p>
+<h3 id="w6-1d-example--starting-the-backward-pass">1D example — starting the backward pass</h3>
+<p><img alt="Backprop 1D example, dL/dz3" src="assets/week6/slide-35.jpg" /></p>
+<p>Loss: <code>L = ½(f(x_j) - y_j)²</code>. The very first gradient we can compute is <code>∂L/∂z⁽³⁾ = z⁽³⁾ - y_j</code> — easy, because we already know <code>z⁽³⁾</code> from the forward pass.</p>
+<h3 id="w6-1d-example--chain-rule-backwards-layer-2">1D example — chain rule backwards (layer 2)</h3>
+<p><img alt="Backprop 1D example, dL/dz2 and dL/dw2" src="assets/week6/slide-36.jpg" /></p>
+<p>Using the <strong>chain rule</strong>, we can express each gradient in terms of the one "ahead" of it (closer to the output):</p>
+<pre><code>∂L/∂z⁽²⁾ = ∂z⁽³⁾/∂z⁽²⁾ · ∂L/∂z⁽³⁾
+∂L/∂w⁽²⁾ = ∂z⁽³⁾/∂w⁽²⁾ · ∂L/∂z⁽³⁾ = x⁽²⁾ · ∂L/∂z⁽³⁾
+</code></pre>
+<p>This is exactly why it's called <em>back</em>-propagation — gradients flow backward, layer by layer, reusing work from the layer after them.</p>
+<h3 id="w6-1d-example--chain-rule-backwards-layer-1">1D example — chain rule backwards (layer 1)</h3>
+<p><img alt="Backprop 1D example, dL/dz1 and dL/dw1" src="assets/week6/slide-37.jpg" /></p>
+<p>Same idea, one more layer back:</p>
+<pre><code>∂L/∂z⁽¹⁾ = ∂z⁽²⁾/∂z⁽¹⁾ · ∂L/∂z⁽²⁾
+∂L/∂w⁽¹⁾ = x⁽¹⁾ · ∂L/∂z⁽²⁾
+</code></pre>
+<p>Then update <code>w⁽¹⁾ ← w⁽¹⁾ - α · ∂L/∂w⁽¹⁾</code>.</p>
+<h3 id="w6-1d-example--one-full-iteration">1D example — one full iteration</h3>
+<p><img alt="Backprop 1D example, one iteration summary" src="assets/week6/slide-38.jpg" /></p>
+<p>One training iteration =
+1. Sample <code>j</code> randomly
+2. <strong>Forward pass</strong>: compute <code>z⁽¹⁾, x⁽¹⁾, z⁽²⁾, x⁽²⁾, z⁽³⁾</code>
+3. <strong>Backward pass</strong>: compute all the gradients, then update each weight</p>
+<h3 id="w6-backpropagation--take-home-message">Backpropagation — take-home message</h3>
+<p><img alt="Backprop take-home message final" src="assets/week6/slide-39.jpg" /></p>
+<p>The forward pass gives predictions; the backward pass gives gradients for every weight matrix (<code>W⁽⁰⁾, W⁽¹⁾, W⁽²⁾</code>), which are then used to update the weights. In practice, deep learning frameworks (PyTorch, TensorFlow) do this automatically — you rarely hand-derive it.</p>
+<hr />
+<h2 id="w6-part-6-mini-batch-training">Part 6: Mini-Batch Training</h2>
+<h3 id="w6-from-single-sample-to-a-mini-batch">From single sample to a mini-batch</h3>
+<p><img alt="From SGD to mini-batch" src="assets/week6/slide-40.jpg" /></p>
+<p>Instead of picking just <strong>one</strong> random sample per iteration, pick <strong>several</strong> (a mini-batch <code>𝒥</code>), and average the gradient over them:</p>
+<pre><code>(1/|𝒥|) Σ_{j∈𝒥} ∂Loss(f(x_j), y_j) / ∂W
+</code></pre>
+<h3 id="w6-sgd-vs-mini-batch-vs-full-gradient">SGD vs. mini-batch vs. full gradient</h3>
+<p><img alt="Comparing SGD, mini-batch, full gradient" src="assets/week6/slide-41.jpg" /></p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Batch size</th>
+<th>Trade-off</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SGD</strong></td>
+<td>1</td>
+<td>Cheap per step, but noisy — needs many iterations</td>
+</tr>
+<tr>
+<td><strong>Mini-batch</strong></td>
+<td>&gt;1 (e.g. 16, 32, 64)</td>
+<td>Best of both worlds — the standard choice in practice</td>
+</tr>
+<tr>
+<td><strong>Full gradient</strong></td>
+<td>n (whole dataset)</td>
+<td>Very expensive per step; doesn't really work well for neural nets</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rule of thumb: always use mini-batches</strong>, typically sized 16, 32, or 64.</p>
+<hr />
+<h2 id="w6-part-7-summary-of-a-fully-connected-neural-network">Part 7: Summary of a Fully Connected Neural Network</h2>
+<h3 id="w6-network-structure--worked-example">Network structure — worked example</h3>
+<p><img alt="Summary example, network structure" src="assets/week6/slide-42.jpg" /></p>
+<p>Designing a network means choosing: <strong>number of layers</strong>, <strong>width of each layer</strong>, and <strong>activation functions</strong>. Example for digit recognition (785 input pixels, 10 output classes): 2 hidden layers with ReLU, output layer with Softmax.</p>
+<h3 id="w6-trainable-parameters">Trainable parameters</h3>
+<p><img alt="Summary, trainable parameters" src="assets/week6/slide-43.jpg" /></p>
+<p>For the same example, parameter counts:</p>
+<pre><code>W⁽⁰⁾ ∈ ℝ^(d₁×785)
+W⁽¹⁾ ∈ ℝ^(d₂×d₁)
+W⁽²⁾ ∈ ℝ^(10×d₂)
+
+Total parameters = 785·d₁ + d₁·d₂ + 10·d₂
+</code></pre>
+<h3 id="w6-loss-functions">Loss functions</h3>
+<p><img alt="Summary, loss functions" src="assets/week6/slide-44.jpg" /></p>
+<ul>
+<li><strong>Classification</strong> → cross-entropy loss</li>
+<li><strong>Regression</strong> (continuous labels) → L1 or squared L2 loss</li>
+</ul>
+<p>Overall flow: <code>x → Neural Network → f(x)</code>, compare <code>f(x)</code> against true label <code>y</code> → <strong>Loss</strong>.</p>
+<h3 id="w6-full-summary">Full summary</h3>
+<p><img alt="Summary, full checklist" src="assets/week6/slide-45.jpg" /></p>
+<p>To design and train a fully connected neural network, you need to decide:</p>
+<ol>
+<li><strong>Network structure</strong> — number of layers, width of each layer, activation functions</li>
+<li><strong>Loss function</strong> — cross-entropy (classification) or L1/squared L2 (regression)</li>
+<li><strong>How to compute gradients</strong> — forward pass + backward pass (usually automatic in deep learning frameworks), plus your batch size</li>
+<li><strong>Optimization algorithm</strong> — SGD, SGD with momentum, AdaGrad, RMSprop, etc. (and their hyperparameters)</li>
+</ol>
+<p><img alt="Neural networks video reference again" src="assets/week6/slide-46.jpg" /></p>
+<hr />
+<h2 id="w6-part-8-quiz">Part 8: Quiz</h2>
+<p><img alt="Quiz questions" src="assets/week6/slide-47.jpg" /></p>
+<p><strong>Q1. In a fully connected neural network, what does the width of a hidden layer represent?</strong>
+→ <strong>B. The number of neurons in that hidden layer</strong></p>
+<p><strong>Q2. What is the primary purpose of backpropagation when training a neural network?</strong>
+→ <strong>C. To compute gradients of the loss with respect to the trainable parameters</strong></p>
+<p><strong>Q3. Which of the following correctly describes mini-batch training?</strong>
+→ <strong>C. It computes the gradient using several training samples in each iteration</strong></p>
+<hr />
+<h2 id="w6-part-9-references">Part 9: References</h2>
+<p><img alt="References slide" src="assets/week6/slide-48.jpg" /></p>
+<ul>
+<li>Lawrence, J. (1994). <em>Introduction to Neural Networks</em>. California Scientific Software Press.</li>
+<li>Michalski, R. S., Carbonell, J. G., &amp; Mitchell, T. M. (Eds.). (2013). <em>Machine Learning: An Artificial Intelligence Approach</em>. Springer Science &amp; Business Media.</li>
+<li>Goodfellow, I., Bengio, Y., &amp; Courville, A. (2016). <em>Deep Learning</em>. MIT Press.</li>
+<li>Samuel, A. L. (1959). Some Studies in Machine Learning Using the Game of Checkers. <em>IBM Journal of Research and Development</em>, 3(3), 210–229. doi: 10.1147/rd.33.0210</li>
+<li><a href="https://github.com/wangshusen/DeepLearning">github.com/wangshusen/DeepLearning</a></li>
+<li><a href="https://cs229.stanford.edu">cs229.stanford.edu</a></li>
+</ul>
+<p><img alt="Thank you" src="assets/week6/slide-50.jpg" /></p>
+      </div>
+      <a class="back-top" href="#top">&uarr; Back to top</a>
+    </section>
+
+  </main>
+
+  <footer>
+    Compiled study notes &middot; CSE5ML / CSE3CI &middot; La Trobe University
+  </footer>
+
+</body>
+</html>
